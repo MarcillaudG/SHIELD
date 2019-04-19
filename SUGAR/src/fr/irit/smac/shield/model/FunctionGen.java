@@ -1,11 +1,13 @@
 package fr.irit.smac.shield.model;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 import java.util.Random;
 
 import fr.irit.smac.shield.exceptions.NotEnoughParametersException;
+import fr.irit.smac.shield.exceptions.TooMuchVariableToRemoveException;
 
 public class FunctionGen {
 
@@ -17,7 +19,7 @@ public class FunctionGen {
 	private Deque<Operator> operators;
 
 	private Deque<String> variables;
-	
+
 	private double lastValue;
 
 	public double compute(Deque<Double> xi) throws NotEnoughParametersException {
@@ -43,7 +45,7 @@ public class FunctionGen {
 		switch(poll2) {
 		case ADD:
 			return res + poll;
-		/*case DIV:
+			/*case DIV:
 			return res / poll;*/
 		case MULT:
 			return res * poll;
@@ -55,6 +57,12 @@ public class FunctionGen {
 		}
 	}
 
+	/**
+	 * The constructor
+	 * 
+	 * @param nbVar
+	 * @param variables
+	 */
 	private FunctionGen(int nbVar, Deque<String> variables) {
 		this.nbVar = nbVar;
 		this.operators = new ArrayDeque<Operator>();
@@ -63,7 +71,26 @@ public class FunctionGen {
 	}
 
 
+	/**
+	 * The constructor where we can specify the operators
+	 * 
+	 * @param nbVar
+	 * @param variables
+	 * @param queOperatorsTmp
+	 */
+	public FunctionGen(int nbVar, Deque<String> variables, Deque<Operator> operators) {
+		this.nbVar = nbVar;
+		this.operators = operators;
+		this.variables = variables;
+		this.lastValue = 0.0;
+	}
 
+	/**
+	 * Static method to generate a function
+	 * @param nbVar
+	 * @param variables
+	 * @return the new Function
+	 */
 	public static FunctionGen generateFunction(int nbVar, Deque<String> variables) {
 		Random rand = new Random();
 		FunctionGen res = new FunctionGen(nbVar,variables);
@@ -79,7 +106,7 @@ public class FunctionGen {
 			case 2:
 				res.addOperator(Operator.MULT);
 				break;
-			/*case 3:
+				/*case 3:
 				res.addOperator(Operator.DIV);
 				break;*/
 			default:
@@ -90,6 +117,64 @@ public class FunctionGen {
 		return res;
 	}
 
+
+	/**
+	 * Function used to degrade a function
+	 * 
+	 * Construct a new function with some of the variables
+	 * and parameters remove
+	 * 
+	 * @param function
+	 * 			the function to degrade
+	 * @param nbToRemove
+	 * 			the number of variables to remove
+	 * @return the degraded function
+	 * 
+	 * @throws TooMuchVariableToRemoveException
+	 * 			when nbToRemove is higher than the number of variables
+	 * 			of the function
+	 */
+	public static FunctionGen degradeFunction(FunctionGen function, int nbToRemove) throws TooMuchVariableToRemoveException {
+		Random rand = new Random();
+		if(nbToRemove > function.getVariables().size()) {
+			throw new TooMuchVariableToRemoveException("Error in degradeFunction : "+nbToRemove+ " asked to remove but only "+function.getVariables().size() + " are availables");
+		}
+		// Collections used to remove randomly 
+		List<String> queVariableTmp = new ArrayList<String>(function.variables);
+		List<Operator> queOperatorsTmp = new ArrayList<Operator>(function.operators);
+		
+		for(int i = 0 ; i < nbToRemove; i++) {
+			int toRemove = rand.nextInt(queVariableTmp.size());
+			queVariableTmp.remove(toRemove);
+			// The case when no variables is left
+			if(!queOperatorsTmp.isEmpty()) {
+				toRemove = rand.nextInt(queOperatorsTmp.size());
+				queOperatorsTmp.remove(toRemove);
+			}
+		}
+		FunctionGen degraded = new FunctionGen(function.getVariables().size()-nbToRemove, new ArrayDeque<String>(queVariableTmp), new ArrayDeque<Operator>(queOperatorsTmp));
+		return degraded;
+	}
+	
+	/**
+	 * Function used when we don't want to specify the number of variables to remove
+	 * 
+	 * @param function
+	 * 
+	 * @return the degraded function
+	 * 
+	 * @throws TooMuchVariableToRemoveException
+	 * 		when the random gives a wrong answer (unlikely to happen)
+	 */
+	public static FunctionGen degradeFunction(FunctionGen function) throws TooMuchVariableToRemoveException {
+		Random rand = new Random();
+		return FunctionGen.degradeFunction(function, rand.nextInt(function.nbVar));
+	}
+
+	/**
+	 * Add an operator for the function
+	 * @param ope
+	 */
 	private void addOperator(Operator ope) {
 		this.operators.push(ope);
 	}
@@ -97,11 +182,17 @@ public class FunctionGen {
 	public Deque<String> getVariables(){
 		return this.variables;
 	}
-	
+
 	public double getLastValue() {
 		return this.lastValue;
 	}
-	
+
+	/**
+	 * Return the maximum a function can have
+	 * TODO Change the value in operate with the correct value of max and min
+	 * 
+	 * @return the maximum
+	 */
 	public double maxOfFunction() {
 		double res = 1.0;
 		Deque<Operator> tmp = new ArrayDeque<Operator>(operators);
@@ -116,6 +207,6 @@ public class FunctionGen {
 		}
 		return res;
 	}
-	
-	
+
+
 }
