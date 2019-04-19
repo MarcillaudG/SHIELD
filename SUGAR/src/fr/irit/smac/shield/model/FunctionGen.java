@@ -21,7 +21,20 @@ public class FunctionGen {
 	private Deque<String> variables;
 
 	private double lastValue;
+	
+	private double max;
+	
+	private double min;
 
+	/**
+	 * Return the value of the function
+	 * @param xi
+	 * 			the queue of the values of the variables
+	 * @return the value of the function
+	 * 
+	 * @throws NotEnoughParametersException
+	 * 			when the number of parameter in xi is not enough
+	 */
 	public double compute(Deque<Double> xi) throws NotEnoughParametersException {
 		double res = 0.0;
 		if(xi.size()>0) {
@@ -184,7 +197,7 @@ public class FunctionGen {
 
 	/**
 	 * Return the maximum a function can have
-	 * TODO Change the value in operate with the correct value of max and min
+	 * when all variables are between 0 and 1.0
 	 * 
 	 * @return the maximum
 	 */
@@ -202,6 +215,47 @@ public class FunctionGen {
 		}
 		return res;
 	}
-
+	
+	/**
+	 * Set the maximum that the function can have
+	 * 
+	 */
+	private void maxOfFunctionWithPlage(Deque<Variable> values) {
+		Deque<Variable> valuesTmp = new ArrayDeque<Variable>(values);
+		double res = valuesTmp.poll().getMax();
+		Deque<Operator> tmp = new ArrayDeque<Operator>(operators);
+		while(!tmp.isEmpty()) {
+			Operator ope = tmp.poll();
+			Variable var = valuesTmp.poll();
+			if(ope == Operator.SUB) {
+				res = operate(res,var.getMin(),ope);
+			}
+			else {
+				res = operate(res,var.getMax(),ope);
+			}
+		}
+		this.max = res;
+	}
+	
+	/**
+	 * Set the maximum that the function can have
+	 * 
+	 */
+	private void minOfFunctionWithPlage(Deque<Variable> values) {
+		Deque<Variable> valuesTmp = new ArrayDeque<Variable>(values);
+		double res = valuesTmp.poll().getMin();
+		Deque<Operator> tmp = new ArrayDeque<Operator>(operators);
+		while(!tmp.isEmpty()) {
+			Operator ope = tmp.poll();
+			Variable var = valuesTmp.poll();
+			if(ope == Operator.SUB) {
+				res = operate(res,var.getMax(),ope);
+			}
+			else {
+				res = operate(res,var.getMin(),ope);
+			}
+		}
+		this.max = res;
+	}
 
 }
