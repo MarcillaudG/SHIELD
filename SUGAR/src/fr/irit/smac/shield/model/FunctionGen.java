@@ -104,9 +104,12 @@ public class FunctionGen {
 	 * @param variables
 	 * @return the new Function
 	 */
+	@Deprecated
 	public static FunctionGen generateFunction(int nbVar, Deque<String> variables) {
 		Random rand = new Random();
 		FunctionGen res = new FunctionGen(nbVar,variables);
+		res.max = 1.0;
+		res.min = 0.0;
 
 		for(int i = 0 ; i < nbVar-1; i++) {
 			switch(rand.nextInt(3)) {
@@ -126,6 +129,45 @@ public class FunctionGen {
 				break;
 			}
 		}
+
+		return res;
+	}
+	
+	/**
+	 * Static method to generate a function
+	 * @param nbVar
+	 * @param variables
+	 * @return the new Function
+	 */
+	public static FunctionGen generateFunctionWithRange(int nbVar, Deque<Variable> variables) {
+		Random rand = new Random();
+		Deque<String> nameOfVariables= new ArrayDeque<String>();
+		Deque<Variable> varTmp = new ArrayDeque<Variable>(variables);
+		while(!varTmp.isEmpty()) {
+			nameOfVariables.push(varTmp.poll().getName());
+		}
+		FunctionGen res = new FunctionGen(nbVar,nameOfVariables);
+
+		for(int i = 0 ; i < nbVar-1; i++) {
+			switch(rand.nextInt(3)) {
+			case 0:
+				res.addOperator(Operator.ADD);
+				break;
+			case 1:
+				res.addOperator(Operator.SUB);
+				break;
+			case 2:
+				res.addOperator(Operator.MULT);
+				break;
+				/*case 3:
+				res.addOperator(Operator.DIV);
+				break;*/
+			default:
+				break;
+			}
+		}
+		res.maxOfFunctionWithRange(variables);
+		res.minOfFunctionWithRange(variables);
 
 		return res;
 	}
@@ -220,7 +262,7 @@ public class FunctionGen {
 	 * Set the maximum that the function can have
 	 * 
 	 */
-	private void maxOfFunctionWithPlage(Deque<Variable> values) {
+	private void maxOfFunctionWithRange(Deque<Variable> values) {
 		Deque<Variable> valuesTmp = new ArrayDeque<Variable>(values);
 		double res = valuesTmp.poll().getMax();
 		Deque<Operator> tmp = new ArrayDeque<Operator>(operators);
@@ -241,7 +283,7 @@ public class FunctionGen {
 	 * Set the maximum that the function can have
 	 * 
 	 */
-	private void minOfFunctionWithPlage(Deque<Variable> values) {
+	private void minOfFunctionWithRange(Deque<Variable> values) {
 		Deque<Variable> valuesTmp = new ArrayDeque<Variable>(values);
 		double res = valuesTmp.poll().getMin();
 		Deque<Operator> tmp = new ArrayDeque<Operator>(operators);

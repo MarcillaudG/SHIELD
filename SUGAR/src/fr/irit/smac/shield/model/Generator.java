@@ -118,6 +118,7 @@ public class Generator {
 	 * Create a new variable and construct the corresponding function
 	 * @param variable
 	 */
+	@Deprecated
 	private void initVariable(String variable) {
 		List<String> variablesRemaining = new ArrayList<String>(this.variables.keySet());
 
@@ -141,9 +142,44 @@ public class Generator {
 		//System.out.println(v.getName()+ " " +v.getValue()+" "+ v.getFun().getVariables());
 
 	}
+	
+	/**
+	 * Create a new variable and construct the corresponding function
+	 * @param variable
+	 */
+	private void initVariableWithRange(String variable) {
+		List<String> variablesRemaining = new ArrayList<String>(this.variables.keySet());
 
+		Variable v = new Variable(variable,MIN_VAR,MAX_VAR);
+
+		int nbVar = this.rand.nextInt(Math.min(NB_MAX_VAR, variablesRemaining.size())+1);
+		Deque<Variable> parameters = new ArrayDeque<Variable>();
+
+		for(int i = 0; i < nbVar && variablesRemaining.size()>0;i++) {
+			String param = variablesRemaining.get(this.rand.nextInt(variablesRemaining.size()));
+			parameters.push(this.variables.get(param));
+			Variable var = this.variables.get(param);
+
+			variablesRemaining.remove(param);
+			variablesRemaining.removeAll(var.getFun().getVariables());
+		}
+		v.setFun(FunctionGen.generateFunctionWithRange(parameters.size(), parameters));
+
+		this.variables.put(variable,v);
+
+		//System.out.println(v.getName()+ " " +v.getValue()+" "+ v.getFun().getVariables());
+
+	}
+
+	@Deprecated
 	public void initVariable() {
 		this.initVariable("Variable"+this.nbVar);
+		this.nbVar++;
+	}
+	
+
+	public void initVariableWithRange() {
+		this.initVariableWithRange("Variable"+this.nbVar);
 		this.nbVar++;
 	}
 
