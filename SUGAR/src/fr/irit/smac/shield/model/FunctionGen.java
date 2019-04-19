@@ -146,11 +146,6 @@ public class FunctionGen {
 		for(int i = 0 ; i < nbToRemove; i++) {
 			int toRemove = rand.nextInt(queVariableTmp.size());
 			queVariableTmp.remove(toRemove);
-			// The case when no variables is left
-			if(!queOperatorsTmp.isEmpty()) {
-				toRemove = rand.nextInt(queOperatorsTmp.size());
-				queOperatorsTmp.remove(toRemove);
-			}
 		}
 		FunctionGen degraded = new FunctionGen(function.getVariables().size()-nbToRemove, new ArrayDeque<String>(queVariableTmp), new ArrayDeque<Operator>(queOperatorsTmp));
 		return degraded;
