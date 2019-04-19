@@ -1,4 +1,4 @@
-package fr.irit.smac.shield.model;
+package fr.irit.smac.shield.exceptions;
 
 public class NotEnoughParametersException extends Exception {
 

@@ -9,6 +9,8 @@ import java.util.Random;
 import java.util.Set;
 import java.util.TreeMap;
 
+import fr.irit.smac.shield.exceptions.NotEnoughParametersException;
+
 public class Generator {
 
 

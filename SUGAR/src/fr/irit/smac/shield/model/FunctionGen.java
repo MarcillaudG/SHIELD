@@ -5,6 +5,8 @@ import java.util.Deque;
 import java.util.List;
 import java.util.Random;
 
+import fr.irit.smac.shield.exceptions.NotEnoughParametersException;
+
 public class FunctionGen {
 
 
