@@ -1,8 +1,8 @@
-package fr.irit.smac.views;
+package fr.irit.smac.shield.views;
 
 
 import fr.irit.smac.lxplot.LxPlot;
-import fr.irit.smac.model.Generator;
+import fr.irit.smac.shield.model.Generator;
 
 public class MainWindow {
 

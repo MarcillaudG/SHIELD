@@ -1,4 +1,4 @@
-package fr.irit.smac.model;
+package fr.irit.smac.shield.model;
 
 public class Test {
 
