@@ -8,47 +8,51 @@ import java.util.Random;
 
 import fr.irit.smac.shield.exceptions.NotEnoughParametersException;
 import fr.irit.smac.shield.exceptions.TooMuchVariableToRemoveException;
-import fr.irit.smac.shield.model.FunctionGen;
-import fr.irit.smac.shield.model.FunctionGen.Operator;
 
 public class SyntheticFunction {
 
 	private String name;
-	
+
+	private GeneratorOfFunction generator;
+
 	private Deque<Operator> operators;
-	
+
 	private Deque<String> operands;
-	
+
 	private double lastValue;
 
 	public enum Operator{ADD,SUB,MULT};
-	
-	public SyntheticFunction(String name) {
+
+	public SyntheticFunction(String name,GeneratorOfFunction gen) {
 		this.name = name;
-		
+		this.generator = gen;
+
 		init();
 	}
 
-	public SyntheticFunction(String name2, Deque<String> operands) {
+	public SyntheticFunction(String name2,GeneratorOfFunction gen, Deque<String> operands) {
 		this.name = name2;
 		this.operands = operands;
+		this.generator = gen;
 		initOperators();
 	}
-	
-	public SyntheticFunction(String name2, Deque<String> operands, Deque<Operator> operators) {
+
+
+	public SyntheticFunction(String name2, GeneratorOfFunction gen, Deque<String> operands, Deque<Operator> operators) {
 		this.name = name2;
 		this.operands = operands;
 		this.operators = operators;
+		this.generator = gen;
 	}
 
 
 	private void init() {
 		this.operands = new ArrayDeque<String>();
 		this.operators = new ArrayDeque<Operator>();
-		
+
 		this.lastValue = 0.0;
 	}
-	
+
 
 	private void initOperators() {
 		this.operators = new ArrayDeque<Operator>();
@@ -79,20 +83,14 @@ public class SyntheticFunction {
 	 * 			the queue of the values of the variables
 	 * @return the value of the function
 	 * 
-	 * @throws NotEnoughParametersException
-	 * 			when the number of parameter in xi is not enough
 	 */
-	public double compute(Deque<Double> xi) throws NotEnoughParametersException {
+	public double compute() {
 		double res = 0.0;
-		if(xi.size()>0) {
-			if(xi.size() != this.operators.size()+1) {
-				throw new NotEnoughParametersException("ERROR COMPUTATION : XI : "+xi.size()+" OPERATORS : "+operators.size());
-			}
-			res = xi.poll();
-			Deque<Operator> tmp = new ArrayDeque<Operator>(operators);
-			while(!xi.isEmpty()) {
-				res = operate(res,xi.poll(),tmp.poll());
-			}
+		Deque<String> xi = new ArrayDeque<String>(this.operands);
+		res = this.generator.getValueOfVariable(xi.poll());
+		Deque<Operator> tmp = new ArrayDeque<Operator>(operators);
+		while(!xi.isEmpty()) {
+			res = operate(res,this.generator.getValueOfVariable(xi.poll()),tmp.poll());
 		}
 		this.lastValue = res;
 		return res;
@@ -113,7 +111,7 @@ public class SyntheticFunction {
 
 		}
 	}
-	
+
 	/**
 	 * Function used to degrade a function
 	 * 
@@ -138,15 +136,15 @@ public class SyntheticFunction {
 		// Collections used to remove randomly 
 		List<String> queVariableTmp = new ArrayList<String>(this.operands);
 		List<Operator> queOperatorsTmp = new ArrayList<Operator>(this.operators);
-		
+
 		for(int i = 0 ; i < nbToRemove; i++) {
 			int toRemove = rand.nextInt(queVariableTmp.size());
 			queVariableTmp.remove(toRemove);
 		}
-		SyntheticFunction degraded = new SyntheticFunction(this.name, new ArrayDeque<String>(queVariableTmp), new ArrayDeque<Operator>(queOperatorsTmp));
+		SyntheticFunction degraded = new SyntheticFunction(this.name,this.generator, new ArrayDeque<String>(queVariableTmp), new ArrayDeque<Operator>(queOperatorsTmp));
 		return degraded;
 	}
-	
+
 	/**
 	 * Function used when we don't want to specify the number of variables to remove
 	 * 
@@ -161,11 +159,11 @@ public class SyntheticFunction {
 		Random rand = new Random();
 		return this.degradeFunction(rand.nextInt(this.operands.size()));
 	}
-	
+
 	public String getName() {
 		return this.name;
 	}
-	
+
 	public Deque<String> getOperands(){
 		return this.operands;
 	}
@@ -175,6 +173,6 @@ public class SyntheticFunction {
 		return "SyntheticFunction [name=" + name + ", operators=" + operators + ", operands=" + operands
 				+ ", lastValue=" + lastValue + "]";
 	}
-	
-	
+
+
 }

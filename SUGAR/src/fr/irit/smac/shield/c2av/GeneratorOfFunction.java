@@ -62,7 +62,7 @@ public class GeneratorOfFunction {
 		for(int i = 0; i < nbVar; i++) {
 			variables.push(variablesRemaining.remove(rand.nextInt(variablesRemaining.size())));
 		}
-		SyntheticFunction fun = new SyntheticFunction("Function "+this.nbFunction,variables);
+		SyntheticFunction fun = new SyntheticFunction("Function "+this.nbFunction,this,variables);
 		this.functions.put(fun.getName(), fun);
 		this.nbFunction++;
 		return fun;
@@ -72,6 +72,14 @@ public class GeneratorOfFunction {
 		for(SyntheticFunction f : this.functions.values()) {
 			System.out.println(f);
 		}
+	}
+	
+	public void generateNewValues() {
+		this.generator.generateAllValues();
+	}
+
+	public double getValueOfVariable(String poll) {
+		return this.generator.getValueOfVariable(poll);
 	}
 
 }
