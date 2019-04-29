@@ -21,9 +21,9 @@ public class FunctionGen {
 	private Deque<String> variables;
 
 	private double lastValue;
-	
+
 	private double max;
-	
+
 	private double min;
 
 	/**
@@ -132,7 +132,7 @@ public class FunctionGen {
 
 		return res;
 	}
-	
+
 	/**
 	 * Static method to generate a function
 	 * @param nbVar
@@ -197,7 +197,7 @@ public class FunctionGen {
 		// Collections used to remove randomly 
 		List<String> queVariableTmp = new ArrayList<String>(function.variables);
 		List<Operator> queOperatorsTmp = new ArrayList<Operator>(function.operators);
-		
+
 		for(int i = 0 ; i < nbToRemove; i++) {
 			int toRemove = rand.nextInt(queVariableTmp.size());
 			queVariableTmp.remove(toRemove);
@@ -205,7 +205,7 @@ public class FunctionGen {
 		FunctionGen degraded = new FunctionGen(function.getVariables().size()-nbToRemove, new ArrayDeque<String>(queVariableTmp), new ArrayDeque<Operator>(queOperatorsTmp));
 		return degraded;
 	}
-	
+
 	/**
 	 * Function used when we don't want to specify the number of variables to remove
 	 * 
@@ -257,47 +257,57 @@ public class FunctionGen {
 		}
 		return res;
 	}
-	
+
 	/**
 	 * Set the maximum that the function can have
 	 * 
 	 */
 	private void maxOfFunctionWithRange(Deque<Variable> values) {
-		Deque<Variable> valuesTmp = new ArrayDeque<Variable>(values);
-		double res = valuesTmp.poll().getMax();
-		Deque<Operator> tmp = new ArrayDeque<Operator>(operators);
-		while(!tmp.isEmpty()) {
-			Operator ope = tmp.poll();
-			Variable var = valuesTmp.poll();
-			if(ope == Operator.SUB) {
-				res = operate(res,var.getMin(),ope);
-			}
-			else {
-				res = operate(res,var.getMax(),ope);
-			}
+		if(values.isEmpty()) {
+			this.max = 0.0;
 		}
-		this.max = res;
+		else {
+			Deque<Variable> valuesTmp = new ArrayDeque<Variable>(values);
+			double res = valuesTmp.poll().getMax();
+			Deque<Operator> tmp = new ArrayDeque<Operator>(operators);
+			while(!tmp.isEmpty()) {
+				Operator ope = tmp.poll();
+				Variable var = valuesTmp.poll();
+				if(ope == Operator.SUB) {
+					res = operate(res,var.getMin(),ope);
+				}
+				else {
+					res = operate(res,var.getMax(),ope);
+				}
+			}
+			this.max = res;
+		}
 	}
-	
+
 	/**
 	 * Set the maximum that the function can have
 	 * 
 	 */
 	private void minOfFunctionWithRange(Deque<Variable> values) {
-		Deque<Variable> valuesTmp = new ArrayDeque<Variable>(values);
-		double res = valuesTmp.poll().getMin();
-		Deque<Operator> tmp = new ArrayDeque<Operator>(operators);
-		while(!tmp.isEmpty()) {
-			Operator ope = tmp.poll();
-			Variable var = valuesTmp.poll();
-			if(ope == Operator.SUB) {
-				res = operate(res,var.getMax(),ope);
-			}
-			else {
-				res = operate(res,var.getMin(),ope);
-			}
+		if(values.isEmpty()) {
+			this.min = 0.0;
 		}
-		this.max = res;
+		else {
+			Deque<Variable> valuesTmp = new ArrayDeque<Variable>(values);
+			double res = valuesTmp.poll().getMin();
+			Deque<Operator> tmp = new ArrayDeque<Operator>(operators);
+			while(!tmp.isEmpty()) {
+				Operator ope = tmp.poll();
+				Variable var = valuesTmp.poll();
+				if(ope == Operator.SUB) {
+					res = operate(res,var.getMax(),ope);
+				}
+				else {
+					res = operate(res,var.getMin(),ope);
+				}
+			}
+			this.min = res;
+		}
 	}
 
 }

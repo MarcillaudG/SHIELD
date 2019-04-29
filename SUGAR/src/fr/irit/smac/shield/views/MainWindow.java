@@ -20,7 +20,7 @@ public class MainWindow {
 	
 	private void init() {
 		for(int i = 0; i < NB_VAR;i++) {
-			this.generator.initVariable();
+			this.generator.initVariableWithRange();
 		}
 	}
 	
