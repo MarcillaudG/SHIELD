@@ -13,7 +13,9 @@ import fr.irit.smac.shield.exceptions.NotEnoughParametersException;
 
 public class Generator {
 
-
+	/**
+	 * Singleton or intern class
+	 */
 	private Random rand;
 
 	public static int NB_MAX_VAR;
@@ -58,7 +60,7 @@ public class Generator {
 	 * @param min
 	 * 		the minimal value
 	 * @param max
-	 * 		the maximale value
+	 * 		the maximal value
 	 * @return the new value of the variable
 	 */
 	private double calculValueOfVariable(double variable, FunctionGen h,Deque<Double> xi, double min, double max) {
@@ -94,12 +96,14 @@ public class Generator {
 
 	/**
 	 * Return the new value 
+	 * 
 	 * @param variable
-	 * @return
+	 * 
+	 * @return the value
 	 */
 	public double getValueOfVariableAfterCalcul(String variable) {
 		if(!this.variables.keySet().contains(variable)) {
-			initVariable(variable);
+			initVariableWithRange(variable);
 		}
 		Variable var = this.variables.get(variable);
 
@@ -178,6 +182,9 @@ public class Generator {
 	}
 	
 
+	/**
+	 * Create a new variable with a name generated
+	 */
 	public void initVariableWithRange() {
 		this.initVariableWithRange("Variable"+this.nbVar);
 		this.nbVar++;
@@ -204,10 +211,23 @@ public class Generator {
 
 	}
 
+	/**
+	 * Return the collection with the name of all variables
+	 * 
+	 * @return the set with all the name
+	 * 
+	 */
 	public Set<String> getAllVariables() {
 		return this.variables.keySet();
 	}
 
+	/**
+	 * Return the value of a variable
+	 * 
+	 * @param var
+	 * 
+	 * @return the value
+	 */
 	public double getValueOfH(String var) {
 		return this.variables.get(var).getFun().getLastValue();
 	}
