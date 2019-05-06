@@ -8,7 +8,7 @@ public class MainWindow {
 
 	private Generator generator;
 	
-	private static int NB_VAR = 100;
+	private static int NB_VAR = 500;
 	
 	private int cycle;
 	
