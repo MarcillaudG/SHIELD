@@ -4,15 +4,15 @@ import java.util.Random;
 
 public class Variable {
 
-	
+	//Nom de la variable
 	private String name;
-	
+	//Borne min de la variable
 	private double min;
-	
+	//Borne min de la variable
 	private double max;
-	
+	//Valeur de la variable
 	private double value;
-	
+	//Fonction associée a cette variable
 	private FunctionGen fun;
 
 	public Variable(String name, double min, double max, double value) {
@@ -71,7 +71,9 @@ public class Variable {
 
 	@Override
 	public String toString() {
-		return "Variable [name=" + name + ", min=" + min + ", max=" + max + ", value=" + value+"]";
+		//return "Variable [name=" + name + ", min=" + min + ", max=" + max + ", value=" + value+"]";
+        double percentMax = (value/max)*100;
+        return String.format("Variable [name=%-25s], min=%8.3f, max=%8.3f, value=%8.3f \t [%5.1f%%]",name, min, max, value,percentMax);
 	}
 	
 	

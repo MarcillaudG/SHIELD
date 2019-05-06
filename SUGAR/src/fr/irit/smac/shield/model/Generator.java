@@ -17,7 +17,7 @@ public class Generator {
 	 * Singleton or intern class
 	 */
 	private Random rand;
-
+	//
 	public static int NB_MAX_VAR;
 
 	public static double MIN_VAR = 0.0;
@@ -29,7 +29,7 @@ public class Generator {
 	private int nbVar;
 
 	public Generator() {
-		NB_MAX_VAR = 10;
+		NB_MAX_VAR = 1000;
 		init();
 	}
 
@@ -58,9 +58,9 @@ public class Generator {
 	 * @param xi
 	 * 		the parameters of the function
 	 * @param min
-	 * 		the minimal value
+	 * 		the minimal value (of the output??)
 	 * @param max
-	 * 		the maximal value
+	 * 		the maximal value (of the output??)
 	 * @return the new value of the variable
 	 */
 	private double calculValueOfVariable(double variable, FunctionGen h,Deque<Double> xi, double min, double max) {
@@ -71,7 +71,7 @@ public class Generator {
 			resFun = h.compute(xi);
 			//System.out.println("RESFUN : "+resFun);
 
-			double secop = Math.pow(variable -resFun,2);
+			double secop = Math.pow(variable - resFun,2);
 
 			double denom = secop+1;
 
@@ -151,7 +151,7 @@ public class Generator {
 	 * Create a new variable and construct the corresponding function
 	 * @param variable
 	 */
-	private void initVariableWithRange(String variable) {
+	public void initVariableWithRange(String variable) {
 		List<String> variablesRemaining = new ArrayList<String>(this.variables.keySet());
 
 		Variable v = new Variable(variable,MIN_VAR,MAX_VAR);
