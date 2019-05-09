@@ -1,7 +1,6 @@
 package fr.irit.smac.shield.cahcoac;
 
 import fr.irit.smac.shield.model.Variable;
-import sun.reflect.generics.tree.Tree;
 
 import java.util.TreeMap;
 
@@ -15,8 +14,7 @@ public class Generation {
     }
 
     public double getOutput(){
-        return output;
-    }
+        return output; }
 
     public TreeMap<String, Variable> getInput(){
         return input;

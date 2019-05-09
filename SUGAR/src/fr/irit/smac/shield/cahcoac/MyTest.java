@@ -1,17 +1,16 @@
 package fr.irit.smac.shield.cahcoac;
 
-import com.sun.media.sound.EmergencySoundbank;
-import fr.irit.smac.shield.model.Variable;
+import fr.irit.smac.shield.cahcoac.Function.NormalisedWeightedSum;
+import fr.irit.smac.shield.cahcoac.Function.OutputFunction;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 public class MyTest {
-
-    private static final int NB_INDICATEURS = 10;
-
-
     public static void main(String[] args) {
-        //preset d'indicateurs pour tester (nom,borneMax)
+        //##############################################################################################################
+        // preset d'indicateurs pour exemple (nom,borneMax)
         Map<String,Double> indicateursPreset = new HashMap<>();
         indicateursPreset.put("gazeMirrorPercent",100.0);
         indicateursPreset.put("gazeRoadPercent",100.0);
@@ -22,56 +21,66 @@ public class MyTest {
         indicateursPreset.put("heartRateBPM",160.0);
         indicateursPreset.put("steeringDevianceDeg",30.0);
         indicateursPreset.put("isAsleep",1.0);
-        indicateursPreset.put("danseLaSambaPerMille",1000.0);
+        indicateursPreset.put("danseLaSambaPerMille",100.0);
 
+        //preset de test
+        Map<String,Double> presetTest = new HashMap<>();
+        presetTest.put("var1",100.0);
+        presetTest.put("var2",100.0);
+        presetTest.put("var3",100.0);
+        presetTest.put("var4",100.0);
+        presetTest.put("var5",100.0);
 
+        //choix du preset
+        Map<String,Double> entryPreset = presetTest;
 
+        //##############################################################################################################
+        //Config
+        double outputBound = 1.0;
+        int nbGenerations = 10;
+        boolean doRandGeneration = false;
+        String fileName = "data.json";
+        boolean doLxPlotDisplay = true;
+
+        //##############################################################################################################
         //initialisation du générateur d'input (entrées/indicateurs)
         GeneratorInputCAC genIn = new GeneratorInputCAC();
-        //initialisation des indicateurs du preset
-        for (Map.Entry<String,Double> e:indicateursPreset.entrySet()) {
+        //initialisation du generateur avec leses indicateurs du preset
+        for (Map.Entry<String,Double> e:entryPreset.entrySet()) {
             genIn.initVariableWithRange(e.getKey(),0.0,e.getValue());
         }
 
+        //##############################################################################################################
         //initialisation du generateur d'output (sortie/attention)
-        double outputBound = 1.0;
-        OutputFunction outputFunction = new MeanWeightedSum();
-        GeneratorOutputCAC genOut = new GeneratorOutputCAC(outputFunction,indicateursPreset.keySet(),outputBound);
+        OutputFunction outputFunction = new NormalisedWeightedSum();
+        GeneratorOutputCAC genOut = new GeneratorOutputCAC(outputFunction,entryPreset.keySet(),outputBound,false);
 
+        //##############################################################################################################
         //génération des valeurs des indicateurs
-        int nbGenerations = 10;
-        boolean doAffichage = false;
-
         for (int i = 0; i < nbGenerations; i++) {
-            genIn.generateAllValues();
-            TreeMap<String,Variable> vars = genIn.getAllVariablesWithValue();
-
+            //génération d'une instance d'inputs
+            if(doRandGeneration) genIn.generateAllRandomValues();
+            else genIn.generateAllValues();
             //génération des output
-            genOut.addGeneration("Gen"+i,vars);
-
-            if(doAffichage)for (Map.Entry<String,Variable> e :vars.entrySet()) {
-                System.out.println(e.getValue().toString());
-            }
+            genOut.addGeneration(genIn.getAllVariablesWithValue());
         }
 
+        //##############################################################################################################
         //affichage final
-        //weights
-        System.out.println("Weights:");
-        for (Map.Entry<String,Double> e:genOut.getWeights().entrySet()) {
-            System.out.format("\tvarName:%-25s, Value:%10.3f\n",e.getKey(),e.getValue());
-        }
-        System.out.print("\n");
-        for (String gName: genOut.getGenerationNames()) {
-            Generation generation = genOut.getGeneration(gName);
-            System.out.format("Generation:[%s], Output:[%.3f], fullness:[%5.1f%%]\n",gName,generation.getOutput(), (generation.getOutput()/outputBound)*100);
+        genOut.printAllData();
 
-            for (Variable g :generation.getInput().values()) {
-                System.out.println("\t"+g.toString());
-            }
-            System.out.print("\n");
+        //##############################################################################################################
+        //write JSON to file
+        try (FileWriter file = new FileWriter(fileName)) {
+            file.write(genOut.dataToJSON().toString());
+            file.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-
+        //##############################################################################################################
+        //affichage LxPlot
+        if(doLxPlotDisplay) genOut.displayDataLxPlotShape();
 
     }
 }

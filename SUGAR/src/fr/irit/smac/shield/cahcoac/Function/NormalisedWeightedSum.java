@@ -1,12 +1,15 @@
-package fr.irit.smac.shield.cahcoac;
+package fr.irit.smac.shield.cahcoac.Function;
 
 import fr.irit.smac.shield.model.Variable;
 
 import java.util.TreeMap;
 
-public class MeanWeightedSum extends OutputFunction {
+
+
+public class NormalisedWeightedSum extends OutputFunction {
+    //fait la moyenne pondérée normalisée des variables et poids passés en entrées
     @Override
-    double computeOutput(TreeMap<String, Variable> variables, double maxOutputBound, TreeMap<String,Double> weights) {
+    public double computeOutput(TreeMap<String, Variable> variables, double maxOutputBound, TreeMap<String,Double> weights) {
         double output = 0;
         double maxOutput = 0;
         for (String entryName : variables.keySet()) {
@@ -17,5 +20,10 @@ public class MeanWeightedSum extends OutputFunction {
         double nOutput = (output / maxOutput)*maxOutputBound;
         //System.out.println("OUTPUT:"+output+"\nMaxOUTPUT:"+maxOutput+"\nnOUTPUT:"+nOutput+"\n");
         return nOutput;
+    }
+
+    @Override
+    public String getName() {
+        return "NormalisedWeightedSum";
     }
 }

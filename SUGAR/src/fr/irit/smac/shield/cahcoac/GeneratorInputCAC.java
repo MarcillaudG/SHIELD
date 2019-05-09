@@ -19,7 +19,7 @@ public class GeneratorInputCAC {
 
     public static double MAX_VAR = 1.0;
 
-    private Map<String, Variable> variables;
+    private TreeMap<String, Variable> variables;
 
     private int nbVar;
 
@@ -32,8 +32,6 @@ public class GeneratorInputCAC {
         NB_MAX_VAR = nbVarMax;
         init();
     }
-
-
 
     private void init() {
         this.variables = new TreeMap<String,Variable>();
@@ -222,11 +220,17 @@ public class GeneratorInputCAC {
         }
     }
 
+    public void generateAllRandomValues() {
+        Random rand = new Random();
+        for(Variable v : this.variables.values()) {
+            v.setValue(v.getMin()+rand.nextDouble()*v.getMax());
+        }
+    }
+
     public void printAllVariables() {
         for(String s : this.variables.keySet()) {
             System.out.println(this.variables.get(s));
         }
-
     }
 
     public Double getValueOfVariable(String s) {
@@ -245,7 +249,11 @@ public class GeneratorInputCAC {
     }
 
     public TreeMap<String,Variable> getAllVariablesWithValue(){
-        return new TreeMap<>(variables);
+        TreeMap<String,Variable> clone = new TreeMap<>();
+        for(Map.Entry<String,Variable> var : variables.entrySet()){
+            clone.put(var.getKey(),new Variable(var.getValue().getName(),var.getValue().getMin(),var.getValue().getMax(),var.getValue().getValue()));
+        }
+        return clone;
     }
 
     /**
