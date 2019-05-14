@@ -315,7 +315,6 @@ public class Controller implements Initializable {
     }
 
     private boolean isValidInputs(String s){
-        //TODO
         return s.matches("^(\\S+ (-?)(0|([1-9][0-9]*))(\\.[0-9]+)?\n)*(\\S+ (-?)(0|([1-9][0-9]*))(\\.[0-9]+)?)");
 
     }
