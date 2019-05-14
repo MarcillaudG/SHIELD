@@ -64,7 +64,11 @@ public class GeneratorInputCAC {
             resFun = h.compute(xi);
             //System.out.println("RESFUN : "+resFun);
 
-            double secop = Math.pow(variable - resFun,2);
+            //log version
+            double secop = Math.log(Math.abs(variable - resFun));
+            //pow version
+            //double secop = Math.pow(variable - resFun,2);
+
 
             double denom = secop+1;
 
@@ -107,6 +111,38 @@ public class GeneratorInputCAC {
         }
         double res = calculValueOfVariable(var.getValue(), var.getFun(), values, var.getMin(), var.getMax());
         //System.out.println("DIFF : "+(this.variables.get(variable).getValue()-res));
+        this.variables.get(variable).setValue(res);
+        return res;
+    }
+
+    public double getValueOfVariableAfterCalculWithGaussianNoise(String variable) {
+        //En chantier
+        Variable var = this.variables.get(variable);
+        Random rand = new Random();
+        Double res = 0.0;
+        Double mid = (var.getMin()+(var.getMax()- var.getMin())/2);
+        Double distToMid = Math.abs(var.getValue() - mid);
+        res = res + rand.nextGaussian()*distToMid*1.5+mid;
+        if(res>var.getMax()) res = var.getMax();
+        else if(res < var.getMin()) res = var.getMin();
+        this.variables.get(variable).setValue(res);
+        return res;
+    }
+
+
+    public double getValueOfVariableAfterCalculWithNoise(String variable) {
+        Double res =0.0;
+        Variable var = this.variables.get(variable);
+        Random rand = new Random();
+        Double variance = var.getMax()/20.0+rand.nextDouble()*var.getMax()/5.0;
+        Double mid = (var.getMax()-var.getMin())/2;
+        if(rand.nextDouble() < 0.5){
+            res = var.getValue()+variance;
+        } else {
+            res = var.getValue() - variance;
+        }
+        if(res>var.getMax()) res = var.getMax()-rand.nextDouble()*mid; else if(res < var.getMin()) res = var.getMin()+rand.nextDouble()*mid;
+        System.out.println("var:"+variance+" oldVal:"+var.getValue()+" newVal:"+res);
         this.variables.get(variable).setValue(res);
         return res;
     }
@@ -224,6 +260,12 @@ public class GeneratorInputCAC {
         Random rand = new Random();
         for(Variable v : this.variables.values()) {
             v.setValue(v.getMin()+rand.nextDouble()*v.getMax());
+        }
+    }
+
+    public void generateAllValuesWithNoise() {
+        for(String s : this.variables.keySet()) {
+            this.getValueOfVariableAfterCalculWithNoise(s);
         }
     }
 

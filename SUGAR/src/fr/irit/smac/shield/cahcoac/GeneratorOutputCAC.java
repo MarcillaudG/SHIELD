@@ -1,18 +1,12 @@
 package fr.irit.smac.shield.cahcoac;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import com.sun.javafx.geom.Shape;
 import fr.irit.smac.lxplot.LxPlot;
 import fr.irit.smac.lxplot.commons.ChartType;
-import fr.irit.smac.lxplot.server.LxPlotChart;
 import fr.irit.smac.shield.cahcoac.Function.OutputFunction;
 import fr.irit.smac.shield.model.Variable;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.xy.XYItemRenderer;
-
-import java.awt.*;
-import java.awt.geom.Ellipse2D;
 import java.util.*;
 
 public class GeneratorOutputCAC {
@@ -25,7 +19,7 @@ public class GeneratorOutputCAC {
 
     public GeneratorOutputCAC(OutputFunction f, Set<String> inputNames, double maxOut, boolean doRandomWeights){
         rand = new Random();
-        nbGen = 0;
+        nbGen = 1000;
         weights = new TreeMap<>();
         data = new TreeMap<>();
         maxOutputBound = maxOut;
@@ -52,7 +46,7 @@ public class GeneratorOutputCAC {
         return data.get(genName);
     }
 
-    public JsonObject dataToJSON(){
+    public String dataToJSON(){
         // output
         JsonObject jsonFinal = new JsonObject();
 
@@ -62,12 +56,24 @@ public class GeneratorOutputCAC {
         jsonInfo.addProperty("outputMinBound",0.0);
         jsonInfo.addProperty("outputMaxBound",maxOutputBound);
         jsonInfo.addProperty("nbInputs",weights.size());
-        jsonInfo.addProperty("nbGenerations",nbGen);
+        jsonInfo.addProperty("nbGenerations",nbGen-1000);
         jsonFinal.add("info",jsonInfo);
+
+        //preset
+        JsonObject jsonPreset = new JsonObject();
+        JsonObject jsonBounds = new JsonObject();
+        for(Variable v : data.get("Gen1000").getInput().values()){
+            jsonBounds = new JsonObject();
+            jsonBounds.addProperty("min",v.getMin());
+            jsonBounds.addProperty("max",v.getMax());
+            jsonPreset.add(v.getName(),jsonBounds);
+        }
+        jsonFinal.add("bounds",jsonPreset);
 
         //weights
         JsonObject jsonWeights = new JsonObject();
         for(Map.Entry<String,Double> e:weights.entrySet()){
+
             jsonWeights.addProperty(e.getKey(),e.getValue());
         }
         jsonFinal.add("weights",jsonWeights);
@@ -78,17 +84,13 @@ public class GeneratorOutputCAC {
             JsonObject jsonGeneration = new JsonObject();
             jsonGeneration.addProperty("output",g.getValue().getOutput());
             for(Map.Entry<String,Variable> v:g.getValue().getInput().entrySet()){
-                JsonObject jsonVariable = new JsonObject();
-                jsonVariable.addProperty("min",v.getValue().getMin());
-                jsonVariable.addProperty("max",v.getValue().getMax());
-                jsonVariable.addProperty("value",v.getValue().getValue());
-                jsonGeneration.add(v.getKey(),jsonVariable);
+                jsonGeneration.addProperty(v.getKey(),v.getValue().getValue());
             }
             jsonData.add(g.getKey(),jsonGeneration);
         }
         jsonFinal.add("data",jsonData);
-
-        return jsonFinal;
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        return gson.toJson(jsonFinal);
     }
 
     public TreeMap<String,Double> getWeights(){
@@ -114,9 +116,37 @@ public class GeneratorOutputCAC {
         }
     }
 
-    public void displayDataLxPlotShape(){
+    public String getDataAsString(){
+        String return_s = "";
+        //affichage des poids
+        //System.out.println("Weights:");
+        return_s += "Weights:\n";
+        for (Map.Entry<String,Double> e:weights.entrySet()) {
+            //System.out.format("\tvarName:%-25s, Value:%10.3f\n",e.getKey(),e.getValue());
+            return_s += String.format("\tvarName:%-25s, Value:%10.3f\n",e.getKey(),e.getValue());
+        }
+
+        //affichage des generations
+        for(Map.Entry<String,Generation> data: data.entrySet()){
+            //entete général sur la generation
+            //System.out.format("Generation:[%s], Output:[%.3f], fullness:[%5.1f%%]\n",data.getKey(),data.getValue().getOutput(), (data.getValue().getOutput()/maxOutputBound)*100);
+            return_s += String.format("Generation:[%s], Output:[%.3f], fullness:[%5.1f%%]\n",data.getKey(),data.getValue().getOutput(), (data.getValue().getOutput()/maxOutputBound)*100);
+            //variables de la génération
+            for (Variable v :data.getValue().getInput().values()) {
+                //System.out.println("\t"+v.toString());
+                return_s += "\t"+v.toString()+"\n";
+            }
+            //System.out.print("\n");
+            return_s += "\n";
+        }
+        return return_s;
+    }
+
+    public void displayDataLxPlotGeneration(){
         int i;
-        ChartType chartType = ChartType.SHAPE;
+        //ChartType chartType = ChartType.SHAPE;
+        ChartType chartType = ChartType.BAR;
+
 
         for(Map.Entry<String,Generation> g: data.entrySet()){
             String genName = g.getKey()+"[Out:"+g.getValue().getOutput()+"]";
@@ -128,6 +158,21 @@ public class GeneratorOutputCAC {
             for(Map.Entry<String,Double> w: weights.entrySet()){
                 LxPlot.getChart(genName,chartType).add("Weights(%)",i++,w.getValue());
             }
+        }
+    }
+
+    public void displayDataLxPlotInput(){
+        int i=0;
+        ChartType chartType = ChartType.SHAPE;
+
+        for(Map.Entry<String,Generation> g: data.entrySet()){
+            for(Map.Entry<String,Variable> v : g.getValue().getInput().entrySet()){
+                LxPlot.getChart(v.getKey(),chartType).add("Data(%)",i,v.getValue().getValue()/v.getValue().getMax());
+            }
+            for(Map.Entry<String,Double> w: weights.entrySet()){
+                LxPlot.getChart(w.getKey(),chartType).add("Weights(%)",i,w.getValue());
+            }
+            i++;
         }
     }
 
