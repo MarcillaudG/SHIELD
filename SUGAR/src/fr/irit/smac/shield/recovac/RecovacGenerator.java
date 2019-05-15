@@ -256,4 +256,27 @@ public class RecovacGenerator extends Generator {
 		
 		return newValueD;
 	}
+	
+	/**
+	 * VersionKris
+	 * Return the new value 
+	 * @param variable
+	 * @return
+	 */
+	public double getValueOfVariableAfterCalcul(String variable) {
+		if(!this.variables.keySet().contains(variable)) {
+			initVariable(variable);
+		}
+		Variable var = this.variables.get(variable);
+
+		Deque<Double> values = new ArrayDeque<Double>();
+		Deque<String> paramTmp = new ArrayDeque<String>(var.getFun().getVariables());
+		while(!paramTmp.isEmpty()) {
+			values.offer(this.variables.get(paramTmp.poll()).getValue());
+		}
+		double res = calculValueOfVariable(var, values);
+		//System.out.println("DIFF : "+(this.variables.get(variable).getValue()-res));
+		this.variables.get(variable).setValue(res);
+		return res;
+	}
 }
