@@ -123,30 +123,6 @@ public class Generator {
 	}
 	
 	/**
-	 * Construct the corresponding function
-	 * @param variable
-	 */
-	protected void initFunction(Variable variable) {
-		List<String> variablesRemaining = new ArrayList<String>(this.variables.keySet());
-		int nbVar = this.rand.nextInt(Math.min(NB_MAX_VAR, variablesRemaining.size())+1);
-		
-		Deque<String> parameters = new ArrayDeque<String>();
-				
-		for(int i = 0; i < nbVar && variablesRemaining.size()>0;i++) {
-			String param = variablesRemaining.get(this.rand.nextInt(variablesRemaining.size()));
-			parameters.push(param);
-			Variable var = this.variables.get(param);
-
-			variablesRemaining.remove(param);
-			variablesRemaining.removeAll(var.getFun().getVariables()); //what?
-		}
-		variable.setFun(FunctionGen.generateFunction(parameters.size(), parameters));
-
-		this.variables.put(variable.getName(),variable);
-		System.out.println(variable.getName()+ " " + variable.getFun().getVariables() + variable.getFun().getOperators());
-	}
-	
-	/**
 	 * Create a new variable and construct the corresponding function
 	 * @param variable
 	 */
@@ -171,6 +147,32 @@ public class Generator {
 		this.variables.put(variable,v);
 
 	}
+	
+	/**
+	 * Construct the corresponding function
+	 * @param variable
+	 */
+	protected void initFunction(Variable variable) {
+		List<String> variablesRemaining = new ArrayList<String>(this.variables.keySet());
+		int nbVar = this.rand.nextInt(Math.min(NB_MAX_VAR, variablesRemaining.size())+1);
+		
+		Deque<String> parameters = new ArrayDeque<String>();
+				
+		for(int i = 0; i < nbVar && variablesRemaining.size()>0;i++) {
+			String param = variablesRemaining.get(this.rand.nextInt(variablesRemaining.size()));
+			parameters.push(param);
+			Variable var = this.variables.get(param);
+
+			variablesRemaining.remove(param);
+			variablesRemaining.removeAll(var.getFun().getVariables()); //what?
+		}
+		variable.setFun(FunctionGen.generateFunction(parameters.size(), parameters));
+
+		this.variables.put(variable.getName(),variable);
+		System.out.println(variable.getName()+ " " + variable.getFun().getVariables() + variable.getFun().getOperators());
+	}
+	
+	
 
 	@Deprecated
 	public void initVariable() {
