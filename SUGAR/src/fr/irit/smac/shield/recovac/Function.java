@@ -21,6 +21,7 @@ public class Function {
 	}
 	
 	public FunctionGen getFun() {
+		
 		return fun;
 	}
 	
