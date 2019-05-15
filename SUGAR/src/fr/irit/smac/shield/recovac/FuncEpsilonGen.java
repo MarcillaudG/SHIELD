@@ -1,10 +1,10 @@
-package fr.irit.smac.shield.model;
+package fr.irit.smac.shield.recovac;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import fr.irit.smac.shield.recovac.RecovacGenerator;
+import fr.irit.smac.shield.model.Variable;
 
 public class FuncEpsilonGen extends RecovacGenerator{
 

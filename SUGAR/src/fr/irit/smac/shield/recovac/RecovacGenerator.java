@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.TreeMap;
 
-import fr.irit.smac.shield.model.FuncEpsilonGen;
 import fr.irit.smac.shield.model.FunctionGen;
 import fr.irit.smac.shield.model.Generator;
 import fr.irit.smac.shield.model.Variable;
