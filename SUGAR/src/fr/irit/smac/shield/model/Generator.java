@@ -14,7 +14,7 @@ import fr.irit.smac.shield.exceptions.NotEnoughParametersException;
 public class Generator {
 
 
-	private Random rand;
+	protected Random rand;
 
 	public static int NB_MAX_VAR;
 
@@ -22,9 +22,11 @@ public class Generator {
 
 	public static double MAX_VAR = 1.0;
 
-	private Map<String,Variable> variables;
+	protected Map<String,Variable> variables; 
 
-	private int nbVar;
+	protected int nbVar;
+	
+	protected List<Double> h;
 
 	public Generator() {
 		NB_MAX_VAR = 10;
@@ -36,10 +38,8 @@ public class Generator {
 		init();
 	}
 
-
-
-	private void init() {
-		this.variables = new TreeMap<String,Variable>();
+	protected void init() {
+		this.variables = new TreeMap<String,Variable>(); //tree map?
 		this.rand = new Random();
 		this.nbVar = 1000;
 
@@ -65,6 +65,7 @@ public class Generator {
 		double res = variable;
 		// resultat de la fonction
 		double resFun;
+		
 		try {
 			resFun = h.compute(xi);
 			//System.out.println("RESFUN : "+resFun);
@@ -85,10 +86,12 @@ public class Generator {
 					res = variable + (max-variable)*secop/denom;
 				}
 			}
-
+			this.h.add(resFun);
+			//System.out.println(this.h.size());
 		} catch (NotEnoughParametersException e) {
 			e.printStackTrace();
 		}
+		
 		return res;
 	}
 
@@ -115,33 +118,41 @@ public class Generator {
 	}
 
 	/**
-	 * Create a new variable and construct the corresponding function
+	 * Create a new variable
 	 * @param variable
 	 */
-	private void initVariable(String variable) {
-		List<String> variablesRemaining = new ArrayList<String>(this.variables.keySet());
-
+	protected void initVariable(String variable) {
 		Variable v = new Variable(variable,MIN_VAR,MAX_VAR);
-
+		//System.out.println(v.getName()+ " " +v.getValue());
+		
+		this.initFunction(v);
+	}
+	
+	/**
+	 * Construct the corresponding function
+	 * @param variable
+	 */
+	protected void initFunction(Variable variable) {
+		List<String> variablesRemaining = new ArrayList<String>(this.variables.keySet());
 		int nbVar = this.rand.nextInt(Math.min(NB_MAX_VAR, variablesRemaining.size())+1);
+		
 		Deque<String> parameters = new ArrayDeque<String>();
-
+				
 		for(int i = 0; i < nbVar && variablesRemaining.size()>0;i++) {
 			String param = variablesRemaining.get(this.rand.nextInt(variablesRemaining.size()));
 			parameters.push(param);
 			Variable var = this.variables.get(param);
 
 			variablesRemaining.remove(param);
-			variablesRemaining.removeAll(var.getFun().getVariables());
+			variablesRemaining.removeAll(var.getFun().getVariables()); //what?
 		}
-		v.setFun(FunctionGen.generateFunction(parameters.size(), parameters));
+		variable.setFun(FunctionGen.generateFunction(parameters.size(), parameters));
 
-		this.variables.put(variable,v);
-
-		//System.out.println(v.getName()+ " " +v.getValue()+" "+ v.getFun().getVariables());
-
+		this.variables.put(variable.getName(),variable);
+		
+		System.out.println(variable.getName()+ " " + variable.getFun().getVariables() + variable.getFun().getOperators());
 	}
-
+	
 	public void initVariable() {
 		this.initVariable("Variable"+this.nbVar);
 		this.nbVar++;
@@ -174,5 +185,12 @@ public class Generator {
 
 	public double getValueOfH(String var) {
 		return this.variables.get(var).getFun().getLastValue();
+	}
+	
+	public void printAllValuesOfH() {
+		for(String s : this.variables.keySet()) {
+			System.out.println(this.variables.get(s).getFun().getLastValue());
+		}
+
 	}
 }

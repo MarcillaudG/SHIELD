@@ -2,7 +2,6 @@ package fr.irit.smac.shield.model;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.List;
 import java.util.Random;
 
 import fr.irit.smac.shield.exceptions.NotEnoughParametersException;
@@ -36,6 +35,7 @@ public class FunctionGen {
 		if(Math.abs(this.maxOfFunction()) > 1.0) {
 			res = res / this.maxOfFunction();
 		}
+
 		return res;
 	}
 
@@ -96,6 +96,10 @@ public class FunctionGen {
 
 	public Deque<String> getVariables(){
 		return this.variables;
+	}
+	
+	public Deque<Operator> getOperators(){
+		return this.operators;
 	}
 	
 	public double getLastValue() {

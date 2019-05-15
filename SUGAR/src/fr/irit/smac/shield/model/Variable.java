@@ -2,9 +2,9 @@ package fr.irit.smac.shield.model;
 
 import java.util.Random;
 
-public class Variable {
 
 	
+public class Variable {
 	private String name;
 	
 	private double min;
@@ -26,7 +26,7 @@ public class Variable {
 		this.name = name;
 		this.min = min;
 		this.max = max;
-		this.value = min + new Random().nextDouble()*(max-min);
+		this.value = this.generateValue();
 	}
 
 	public String getName() {
@@ -69,6 +69,10 @@ public class Variable {
 		this.fun = fun;
 	}
 
+	public double generateValue () {
+		return this.value = min + new Random().nextDouble()*(max-min);
+	}
+	
 	@Override
 	public String toString() {
 		return "Variable [name=" + name + ", min=" + min + ", max=" + max + ", value=" + value+"]";
