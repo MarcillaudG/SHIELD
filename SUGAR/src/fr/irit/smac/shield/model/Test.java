@@ -7,7 +7,7 @@ public class Test {
 		Generator gen = new Generator();
 
 		for(int i = 0 ; i < 100; i++) {
-			gen.initVariable();
+			gen.initVariableWithRange(-100,100);
 		}
 		gen.generateAllValues();
 		gen.getValueOfVariable("Variable1000");

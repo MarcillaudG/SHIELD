@@ -48,32 +48,45 @@ public class Generator {
 		System.out.println("Success of the initialization");
 	}
 
+	
+
 	/**
-	 * Return the value calculated by the function of the variable
+	 * Return the new value 
 	 * 
 	 * @param variable
-	 * 		The value of the variable
-	 * @param h
-	 * 		the function
-	 * @param xi
-	 * 		the parameters of the function
-	 * @param min
-	 * 		the minimal value
-	 * @param max
-	 * 		the maximal value
-	 * @return the new value of the variable
+	 * 
+	 * @return the value
 	 */
-	private double calculValueOfVariable(double variable, FunctionGen h,Deque<Double> xi, double min, double max) {
+	public double getValueOfVariableAfterCalcul(String variable) {
+		Variable var = this.variables.get(variable);
+
+		Deque<Double> values = new ArrayDeque<Double>();
+		Deque<String> paramTmp = new ArrayDeque<String>(var.getFun().getVariables());
+		while(!paramTmp.isEmpty()) {
+			values.offer(this.variables.get(paramTmp.poll()).getValue());
+		}
+		//double res = calculValueOfVariable(var.getValue(), var.getFun(), values, var.getMin(), var.getMax());
+		double res = calculValueOfVariable(var,values);
+		this.variables.get(variable).setValue(res);
+		return res;
+	}
+
+	private double calculValueOfVariable(Variable var, Deque<Double> xi) {
+		// TODO REFACTOR
+		double variable = var.getValue();
+		FunctionGen h = var.getFun();
+		double max = var.getMax();
+		double min = var.getMin();
+		
 		double res = variable;
 		// resultat de la fonction
 		double resFun;
 		try {
-			resFun = h.compute(xi);
-			//System.out.println("RESFUN : "+resFun);
+			resFun = h.compute(xi,var);
 
-			double secop = Math.pow(variable -resFun,2);
+			double secop = Math.log(Math.abs(variable -resFun));
 
-			double denom = secop+1;
+			double denom = secop+max;
 
 			if(resFun == 0.0) {
 				res = min + new Random().nextDouble()*(max-min);
@@ -91,30 +104,6 @@ public class Generator {
 		} catch (NotEnoughParametersException e) {
 			e.printStackTrace();
 		}
-		return res;
-	}
-
-	/**
-	 * Return the new value 
-	 * 
-	 * @param variable
-	 * 
-	 * @return the value
-	 */
-	public double getValueOfVariableAfterCalcul(String variable) {
-		if(!this.variables.keySet().contains(variable)) {
-			initVariableWithRange(variable);
-		}
-		Variable var = this.variables.get(variable);
-
-		Deque<Double> values = new ArrayDeque<Double>();
-		Deque<String> paramTmp = new ArrayDeque<String>(var.getFun().getVariables());
-		while(!paramTmp.isEmpty()) {
-			values.offer(this.variables.get(paramTmp.poll()).getValue());
-		}
-		double res = calculValueOfVariable(var.getValue(), var.getFun(), values, var.getMin(), var.getMax());
-		//System.out.println("DIFF : "+(this.variables.get(variable).getValue()-res));
-		this.variables.get(variable).setValue(res);
 		return res;
 	}
 
@@ -143,18 +132,16 @@ public class Generator {
 
 		this.variables.put(variable,v);
 
-		//System.out.println(v.getName()+ " " +v.getValue()+" "+ v.getFun().getVariables());
-
 	}
 	
 	/**
 	 * Create a new variable and construct the corresponding function
 	 * @param variable
 	 */
-	private void initVariableWithRange(String variable) {
+	private void initVariableWithRange(String variable, double min, double max) {
 		List<String> variablesRemaining = new ArrayList<String>(this.variables.keySet());
 
-		Variable v = new Variable(variable,MIN_VAR,MAX_VAR);
+		Variable v = new Variable(variable,min,max);
 
 		int nbVar = this.rand.nextInt(Math.min(NB_MAX_VAR, variablesRemaining.size())+1);
 		Deque<Variable> parameters = new ArrayDeque<Variable>();
@@ -167,11 +154,10 @@ public class Generator {
 			variablesRemaining.remove(param);
 			variablesRemaining.removeAll(var.getFun().getVariables());
 		}
-		v.setFun(FunctionGen.generateFunctionWithRange(parameters.size(), parameters));
+		v.setFun(FunctionGen.generateFunctionWithRange(parameters.size(), parameters,min,max));
 
 		this.variables.put(variable,v);
 
-		//System.out.println(v.getName()+ " " +v.getValue()+" "+ v.getFun().getVariables());
 
 	}
 
@@ -185,13 +171,13 @@ public class Generator {
 	/**
 	 * Create a new variable with a name generated
 	 */
-	public void initVariableWithRange() {
-		this.initVariableWithRange("Variable"+this.nbVar);
+	public void initVariableWithRange(double min, double max) {
+		this.initVariableWithRange("Variable"+this.nbVar,min,max);
 		this.nbVar++;
 	}
 
 	/**
-	 * For all variables, generate the new values
+	 * For all variables, generate the new value
 	 */
 	public void generateAllValues() {
 		for(String s : this.variables.keySet()) {

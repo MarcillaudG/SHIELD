@@ -35,21 +35,30 @@ public class FunctionGen {
 	 * @throws NotEnoughParametersException
 	 * 			when the number of parameter in xi is not enough
 	 */
-	public double compute(Deque<Double> xi) throws NotEnoughParametersException {
+	public double compute(Deque<Double> xi,Variable var) throws NotEnoughParametersException {
 		double res = 0.0;
-		if(xi.size()>0) {
-			if(xi.size() != this.operators.size()+1) {
-				throw new NotEnoughParametersException("ERROR COMPUTATION : XI : "+xi.size()+" OPERATORS : "+operators.size());
+		if(this.min != this.max) {
+			if(xi.size()>0) {
+				if(xi.size() != this.operators.size()+1) {
+					throw new NotEnoughParametersException("ERROR COMPUTATION : XI : "+xi.size()+" OPERATORS : "+operators.size());
+				}
+				res = xi.poll();
+				Deque<Operator> tmp = new ArrayDeque<Operator>(operators);
+				while(!xi.isEmpty()) {
+					res = operate(res,xi.poll(),tmp.poll());
+				}
 			}
-			res = xi.poll();
-			Deque<Operator> tmp = new ArrayDeque<Operator>(operators);
-			while(!xi.isEmpty()) {
-				res = operate(res,xi.poll(),tmp.poll());
-			}
-		}
-		this.lastValue = res;
-		if(Math.abs(this.maxOfFunction()) > 1.0) {
-			res = res / this.maxOfFunction();
+			// TODO REFACTOR
+			double sup = this.max;
+			double inf = this.min;
+			double mini = var.getMin();
+			double maxi = var.getMax();
+
+			double a = (maxi - mini)/(sup - inf);
+			double b = maxi - a *sup;
+			res = a*res+b;
+
+			this.lastValue = res;
 		}
 		return res;
 	}
@@ -139,7 +148,7 @@ public class FunctionGen {
 	 * @param variables
 	 * @return the new Function
 	 */
-	public static FunctionGen generateFunctionWithRange(int nbVar, Deque<Variable> variables) {
+	public static FunctionGen generateFunctionWithRange(int nbVar, Deque<Variable> variables,double min,double max) {
 		Random rand = new Random();
 		Deque<String> nameOfVariables= new ArrayDeque<String>();
 		Deque<Variable> varTmp = new ArrayDeque<Variable>(variables);
@@ -273,7 +282,7 @@ public class FunctionGen {
 			while(!tmp.isEmpty()) {
 				Operator ope = tmp.poll();
 				Variable var = valuesTmp.poll();
-				if(ope == Operator.SUB) {
+				if(ope.equals(Operator.SUB)) {
 					res = operate(res,var.getMin(),ope);
 				}
 				else {
@@ -299,7 +308,7 @@ public class FunctionGen {
 			while(!tmp.isEmpty()) {
 				Operator ope = tmp.poll();
 				Variable var = valuesTmp.poll();
-				if(ope == Operator.SUB) {
+				if(ope.equals(Operator.SUB)) {
 					res = operate(res,var.getMax(),ope);
 				}
 				else {

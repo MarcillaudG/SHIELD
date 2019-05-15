@@ -50,7 +50,7 @@ public class GeneratorOfFunction {
 	 */
 	private void initVariable() {
 		for(int i = 0; i < this.NB_VAR_MAX; i++) {
-			this.generator.initVariableWithRange();
+			this.generator.initVariableWithRange(-100,100);
 		}
 	}
 
