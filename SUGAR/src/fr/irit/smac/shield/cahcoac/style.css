@@ -1,0 +1,14 @@
+
+@font-face {
+    font-family: 'Electrolize';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Electrolize'), local('Electrolize-Regular'), url(http://themes.googleusercontent.com/static/fonts/electrolize/v2/DDy9sgU2U7S4xAwH5thnJ50EAVxt0G0biEntp43Qt6E.ttf) format('truetype');
+}
+
+.label {
+    -fx-font-size: 10pt;
+    -fx-font-family: "Electrolize";
+    -fx-opacity: 0.6;
+}
+

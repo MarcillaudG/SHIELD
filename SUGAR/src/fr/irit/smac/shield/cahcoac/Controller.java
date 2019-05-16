@@ -94,6 +94,12 @@ public class Controller implements Initializable {
     @FXML
     private Label errorInputFormatTF_FX;
 
+    @FXML
+    private TabPane tabPane_FX;
+
+    @FXML
+    private ProgressBar progBar_FX;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         weightTypeCoB_FX.getItems().clear();
@@ -101,7 +107,7 @@ public class Controller implements Initializable {
         weightTypeCoB_FX.getSelectionModel().selectFirst();
 
         generationTypeCoB_FX.getItems().clear();
-        generationTypeCoB_FX.getItems().addAll("Noise Gen","Random Gen","SHIELD Gen");
+        generationTypeCoB_FX.getItems().addAll("SHIELD Gen","Noise Gen","Random Gen");
         generationTypeCoB_FX.getSelectionModel().selectFirst();
 
         generateBtn_FX.setOnAction(new EventHandler<ActionEvent>() {
@@ -131,6 +137,8 @@ public class Controller implements Initializable {
                 importInputJSON();
             }
         });
+
+        //tabPane_FX.setTabMinWidth(33);
 
     }
 
@@ -234,6 +242,7 @@ public class Controller implements Initializable {
             if (!isPositiveInteger(nbGen_s)) errorGenTF_FX.setText("NbGen needs to be a positive Integer (>0)");
             if (!isValidInputs(inputs)) errorInputsTF_FX.setText("Error in input format.");
             if (doFile && !isValidFileName(fileName)) errorFileNameTF_FX.setText("FileName not valid");
+            progBar_FX.setProgress(ProgressBar.INDETERMINATE_PROGRESS);
         } else {
             maxBound = Double.parseDouble(maxBound_S);
             nbGen = Integer.parseInt(nbGen_s);
@@ -300,6 +309,8 @@ public class Controller implements Initializable {
 
             consoleLogTA_FX.clear();
             consoleLogTA_FX.setText(genOut.getDataAsString());
+            progBar_FX.setProgress(100);
+
         }
 
     }

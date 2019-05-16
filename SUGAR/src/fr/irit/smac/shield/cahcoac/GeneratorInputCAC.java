@@ -70,7 +70,7 @@ public class GeneratorInputCAC {
             //double secop = Math.pow(variable - resFun,2);
 
 
-            double denom = secop+1;
+            double denom = secop+100;
 
             if(resFun == 0.0) {
                 res = min + new Random().nextDouble()*(max-min);

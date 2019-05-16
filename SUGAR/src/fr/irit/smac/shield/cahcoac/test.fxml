@@ -10,210 +10,203 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.LinearGradient?>
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.web.WebView?>
 
-<VBox prefHeight="415.0" prefWidth="691.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.irit.smac.shield.cahcoac.Controller">
-  <children>
-    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="403.0" prefWidth="702.0" VBox.vgrow="ALWAYS">
-      <children>
-            <TabPane layoutY="6.0" prefHeight="409.0" prefWidth="705.0" tabClosingPolicy="UNAVAILABLE">
-              <tabs>
-                <Tab text="Configuration">
-                  <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="351.0" prefWidth="705.0">
-                           <children>
-                              <Label layoutX="14.0" layoutY="7.0" prefHeight="32.0" prefWidth="95.0" text="Max Output:" textOverrun="WORD_ELLIPSIS">
-                                 <font>
-                                    <Font name="Calibri" size="14.0" />
-                                 </font>
-                                 <textFill>
-                                    <LinearGradient endX="0.16666666666666663" endY="1.0" startY="0.47619047619047616">
-                                       <stops>
-                                          <Stop color="#417548" />
-                                          <Stop color="#0501ff" offset="1.0" />
-                                       </stops>
-                                    </LinearGradient>
-                                 </textFill>
-                              </Label>
-                              <TextField fx:id="maxOutputTF_FX" layoutX="89.0" layoutY="10.0" prefHeight="26.0" prefWidth="126.0" promptText="Bounds the output">
-                                 <font>
-                                    <Font name="Calibri" size="12.0" />
-                                 </font>
-                              </TextField>
-                              <Label layoutX="368.0" layoutY="7.0" prefHeight="32.0" prefWidth="147.0" text="Number of generations:" textOverrun="WORD_ELLIPSIS">
-                                 <font>
-                                    <Font name="Calibri" size="14.0" />
-                                 </font>
-                                 <textFill>
-                                    <LinearGradient endX="0.9904761904761905" startX="0.6">
-                                       <stops>
-                                          <Stop color="BLACK" />
-                                          <Stop color="#0501ff" offset="1.0" />
-                                       </stops>
-                                    </LinearGradient>
-                                 </textFill>
-                              </Label>
-                              <TextField fx:id="nbGenTF_FX" layoutX="516.0" layoutY="10.0" prefHeight="26.0" prefWidth="175.0" promptText="Number of set to generate">
-                                 <font>
-                                    <Font name="Calibri" size="12.0" />
-                                 </font>
-                              </TextField>
-                              <Separator layoutX="-5.0" layoutY="46.0" prefHeight="9.0" prefWidth="712.0" />
-                              <Separator layoutX="351.0" layoutY="-2.0" orientation="VERTICAL" prefHeight="52.0" prefWidth="7.0" />
-                              <Label layoutX="14.0" layoutY="57.0" prefHeight="32.0" prefWidth="95.0" text="Inputs:" textOverrun="WORD_ELLIPSIS">
-                                 <font>
-                                    <Font name="Calibri" size="14.0" />
-                                 </font>
-                                 <textFill>
-                                    <LinearGradient endX="0.16666666666666663" endY="1.0" startY="0.47619047619047616">
-                                       <stops>
-                                          <Stop color="#417548" />
-                                          <Stop color="#0501ff" offset="1.0" />
-                                       </stops>
-                                    </LinearGradient>
-                                 </textFill>
-                              </Label>
-                              <ScrollPane layoutX="14.0" layoutY="92.0" prefHeight="124.0" prefWidth="319.0">
-                                 <content>
-                                    <TextArea fx:id="inputTA_FX" prefHeight="122.0" prefWidth="316.0" />
-                                 </content>
-                              </ScrollPane>
-                              <Label layoutX="365.0" layoutY="121.0" prefHeight="32.0" prefWidth="109.0" text="Generation type:" textOverrun="WORD_ELLIPSIS">
-                                 <font>
-                                    <Font name="Calibri" size="14.0" />
-                                 </font>
-                                 <textFill>
-                                    <LinearGradient endX="1.0" endY="0.7333333333333334" startX="0.3523809523809524" startY="1.0">
-                                       <stops>
-                                          <Stop color="BLACK" />
-                                          <Stop color="#0501ff" offset="1.0" />
-                                       </stops>
-                                    </LinearGradient>
-                                 </textFill>
-                              </Label>
-                              <Separator layoutX="351.0" layoutY="49.0" orientation="VERTICAL" prefHeight="268.0" prefWidth="7.0" />
-                              <Separator layoutX="353.0" layoutY="308.0" prefHeight="22.0" prefWidth="349.0" />
-                              <ChoiceBox fx:id="generationTypeCoB_FX" layoutX="528.0" layoutY="123.0" prefWidth="150.0" />
-                              <Label layoutX="367.0" layoutY="57.0" prefHeight="32.0" prefWidth="148.0" text="Do LxPlot Input display:" textOverrun="WORD_ELLIPSIS">
-                                 <font>
-                                    <Font name="Calibri" size="14.0" />
-                                 </font>
-                                 <textFill>
-                                    <LinearGradient endX="1.0" endY="0.4904761904761905" startX="0.5666666666666667" startY="1.0">
-                                       <stops>
-                                          <Stop color="BLACK" />
-                                          <Stop color="#0501ff" offset="1.0" />
-                                       </stops>
-                                    </LinearGradient>
-                                 </textFill>
-                              </Label>
-                              <CheckBox fx:id="doLxPlotInputChB_FX" layoutX="653.0" layoutY="60.0" mnemonicParsing="false" />
-                              <Label layoutX="367.0" layoutY="89.0" prefHeight="32.0" prefWidth="175.0" text="Do LxPlot generation display:" textOverrun="WORD_ELLIPSIS">
-                                 <font>
-                                    <Font name="Calibri" size="14.0" />
-                                 </font>
-                                 <textFill>
-                                    <LinearGradient endX="1.0" endY="0.8571428571428572" startX="0.7619047619047619" startY="1.0">
-                                       <stops>
-                                          <Stop color="BLACK" />
-                                          <Stop color="#0501ff" offset="1.0" />
-                                       </stops>
-                                    </LinearGradient>
-                                 </textFill>
-                              </Label>
-                              <CheckBox fx:id="doLxPlotGenChB_FX" layoutX="653.0" layoutY="92.0" mnemonicParsing="false" />
-                              <Button fx:id="generateBtn_FX" layoutX="363.0" layoutY="208.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="314.0" text="Generate" />
-                              <Label layoutX="365.0" layoutY="153.0" prefHeight="32.0" prefWidth="109.0" text="Weight type" textOverrun="WORD_ELLIPSIS">
-                                 <font>
-                                    <Font name="Calibri" size="14.0" />
-                                 </font>
-                                 <textFill>
-                                    <LinearGradient endX="1.0" endY="0.7333333333333334" startX="0.3523809523809524" startY="1.0">
-                                       <stops>
-                                          <Stop color="BLACK" />
-                                          <Stop color="#0501ff" offset="1.0" />
-                                       </stops>
-                                    </LinearGradient>
-                                 </textFill>
-                              </Label>
-                              <ChoiceBox fx:id="weightTypeCoB_FX" layoutX="528.0" layoutY="155.0" prefWidth="150.0" />
-                              <Button fx:id="importInputsTXTBtn_FX" layoutX="76.0" layoutY="57.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="117.0" text="Import from Txt" />
-                              <Label layoutX="17.0" layoutY="217.0" prefHeight="22.0" prefWidth="99.0" text="Format attendu:">
-                                 <font>
-                                    <Font name="Open Sans" size="12.0" />
-                                 </font>
-                              </Label>
-                              <Label layoutX="116.0" layoutY="220.0" prefHeight="14.0" prefWidth="215.0" text=" [inputName] [inputValue(&gt;0)]\n">
-                                 <font>
-                                    <Font name="Consolas Italic" size="12.0" />
-                                 </font>
-                              </Label>
-                              <Label fx:id="errorGenTF_FX" layoutX="364.0" layoutY="251.0" prefHeight="18.0" prefWidth="312.0" textFill="#bf0404" />
-                              <Label fx:id="errorMaxboundTF_FX" layoutX="363.0" layoutY="269.0" prefHeight="18.0" prefWidth="314.0" textFill="#bf0404" />
-                              <Label fx:id="errorInputsTF_FX" layoutX="364.0" layoutY="287.0" prefHeight="18.0" prefWidth="312.0" textFill="#bf0404" />
-                              <Label layoutX="358.0" layoutY="323.0" prefHeight="18.0" prefWidth="108.0" text="Fichier de sortie" />
-                              <TextField fx:id="fileNameTF_FX" layoutX="516.0" layoutY="318.0" prefHeight="26.0" prefWidth="163.0" promptText="ex: nom.extention" />
-                              <CheckBox fx:id="doFileChB_FX" layoutX="452.0" layoutY="319.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="63.0" text="(y/n)">
-                                 <font>
-                                    <Font name="System Italic" size="12.0" />
-                                 </font></CheckBox>
-                              <Label fx:id="errorFileNameTF_FX" layoutX="364.0" layoutY="302.0" prefHeight="18.0" prefWidth="312.0" textFill="#bf0404" />
-                              <Button fx:id="genInputsBtn_FX" layoutX="224.0" layoutY="237.0" mnemonicParsing="false" text="Generate Inputs" />
-                              <TextField fx:id="maxBoundInputTF_FX" layoutX="17.0" layoutY="240.0" prefHeight="27.0" prefWidth="78.0" promptText="Max bound">
-                                 <font>
-                                    <Font name="Calibri" size="12.0" />
-                                 </font>
-                              </TextField>
-                              <TextField fx:id="nbInputTF_FX" layoutX="103.0" layoutY="240.0" prefHeight="27.0" prefWidth="114.0" promptText="Number of inputs">
-                                 <font>
-                                    <Font name="Calibri" size="12.0" />
-                                 </font>
-                              </TextField>
-                              <Label fx:id="inputBoundErrTF_FX" layoutX="18.0" layoutY="278.0" prefHeight="18.0" prefWidth="312.0" textFill="#bf0404" />
-                              <Label fx:id="errorNbInputTF_FX" layoutX="17.0" layoutY="299.0" prefHeight="18.0" prefWidth="314.0" textFill="#bf0404" />
-                              <Button fx:id="importInputsJSONBtn_FX" layoutX="201.0" layoutY="57.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="130.0" text="Import from JSON" />
-                              <Label fx:id="errorInputFormatTF_FX" layoutX="17.0" layoutY="323.0" prefHeight="18.0" prefWidth="314.0" textFill="#bf0404" />
-                           </children>
-                        </AnchorPane>
-                  </content>
-                </Tab>
-                  <Tab text="Display(Json)">
-                    <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                           <children>
-                              <ScrollPane layoutX="-1.0" prefHeight="363.0" prefWidth="691.0" AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="0.0">
-                                 <content>
-                                    <TextArea fx:id="displayTA_FX" editable="false" prefHeight="356.0" prefWidth="681.0" />
-                                 </content>
-                              </ScrollPane>
-                           </children>
-                        </AnchorPane>
-                    </content>
-                  </Tab>
-                  <Tab text="Display Log">
-                    <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                           <children>
-                              <ScrollPane layoutX="-1.0" prefHeight="349.0" prefWidth="705.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                 <content>
-                                    <TextArea fx:id="consoleLogTA_FX" prefHeight="347.0" prefWidth="703.0" />
-                                 </content>
-                              </ScrollPane>
-                           </children>
-                        </AnchorPane>
-                    </content>
-                  </Tab>
-              </tabs>
-            </TabPane>
-      </children>
-    </AnchorPane>
-      <TreeView prefHeight="46.0" prefWidth="705.0" />
-      <WebView prefHeight="0.0" prefWidth="705.0" />
-  </children>
-</VBox>
+
+<AnchorPane prefHeight="378.0" prefWidth="705.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.irit.smac.shield.cahcoac.Controller">
+   <children>
+      <TabPane fx:id="tabPane_FX" layoutY="-20.0" prefHeight="429.0" prefWidth="705.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="Configuration">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="331.0" prefWidth="705.0">
+                     <children>
+                        <Label layoutX="14.0" layoutY="7.0" prefHeight="32.0" prefWidth="95.0" text="Max Output:" textOverrun="WORD_ELLIPSIS">
+                           <font>
+                              <Font name="Calibri" size="14.0" />
+                           </font>
+                           <textFill>
+                              <LinearGradient endX="0.16666666666666663" endY="1.0" startY="0.47619047619047616">
+                                 <stops>
+                                    <Stop color="#417548" />
+                                    <Stop color="#0501ff" offset="1.0" />
+                                 </stops>
+                              </LinearGradient>
+                           </textFill>
+                        </Label>
+                        <TextField fx:id="maxOutputTF_FX" layoutX="89.0" layoutY="10.0" prefHeight="26.0" prefWidth="126.0" promptText="Bounds the output">
+                           <font>
+                              <Font name="Calibri" size="12.0" />
+                           </font>
+                        </TextField>
+                        <Label layoutX="368.0" layoutY="7.0" prefHeight="32.0" prefWidth="147.0" text="Number of generations:" textOverrun="WORD_ELLIPSIS">
+                           <font>
+                              <Font name="Calibri" size="14.0" />
+                           </font>
+                           <textFill>
+                              <LinearGradient endX="0.9904761904761905" startX="0.6">
+                                 <stops>
+                                    <Stop color="BLACK" />
+                                    <Stop color="#0501ff" offset="1.0" />
+                                 </stops>
+                              </LinearGradient>
+                           </textFill>
+                        </Label>
+                        <TextField fx:id="nbGenTF_FX" layoutX="516.0" layoutY="10.0" prefHeight="26.0" prefWidth="175.0" promptText="Number of set to generate">
+                           <font>
+                              <Font name="Calibri" size="12.0" />
+                           </font>
+                        </TextField>
+                        <Separator layoutX="-5.0" layoutY="46.0" prefHeight="9.0" prefWidth="712.0" />
+                        <Separator layoutX="351.0" layoutY="-2.0" orientation="VERTICAL" prefHeight="52.0" prefWidth="7.0" />
+                        <Label layoutX="14.0" layoutY="57.0" prefHeight="32.0" prefWidth="95.0" text="Inputs:" textOverrun="WORD_ELLIPSIS">
+                           <font>
+                              <Font name="Calibri" size="14.0" />
+                           </font>
+                           <textFill>
+                              <LinearGradient endX="0.16666666666666663" endY="1.0" startY="0.47619047619047616">
+                                 <stops>
+                                    <Stop color="#417548" />
+                                    <Stop color="#0501ff" offset="1.0" />
+                                 </stops>
+                              </LinearGradient>
+                           </textFill>
+                        </Label>
+                        <ScrollPane layoutX="14.0" layoutY="92.0" prefHeight="124.0" prefWidth="319.0">
+                           <content>
+                              <TextArea fx:id="inputTA_FX" prefHeight="122.0" prefWidth="316.0" />
+                           </content>
+                        </ScrollPane>
+                        <Label layoutX="365.0" layoutY="121.0" prefHeight="32.0" prefWidth="109.0" text="Generation type:" textOverrun="WORD_ELLIPSIS">
+                           <font>
+                              <Font name="Calibri" size="14.0" />
+                           </font>
+                           <textFill>
+                              <LinearGradient endX="1.0" endY="0.7333333333333334" startX="0.3523809523809524" startY="1.0">
+                                 <stops>
+                                    <Stop color="BLACK" />
+                                    <Stop color="#0501ff" offset="1.0" />
+                                 </stops>
+                              </LinearGradient>
+                           </textFill>
+                        </Label>
+                        <Separator layoutX="351.0" layoutY="49.0" orientation="VERTICAL" prefHeight="268.0" prefWidth="7.0" />
+                        <Separator layoutX="353.0" layoutY="308.0" prefHeight="22.0" prefWidth="349.0" />
+                        <ChoiceBox fx:id="generationTypeCoB_FX" layoutX="528.0" layoutY="123.0" prefWidth="150.0" />
+                        <Label layoutX="367.0" layoutY="57.0" prefHeight="32.0" prefWidth="148.0" text="Do LxPlot Input display:" textOverrun="WORD_ELLIPSIS">
+                           <font>
+                              <Font name="Calibri" size="14.0" />
+                           </font>
+                           <textFill>
+                              <LinearGradient endX="1.0" endY="0.4904761904761905" startX="0.5666666666666667" startY="1.0">
+                                 <stops>
+                                    <Stop color="BLACK" />
+                                    <Stop color="#0501ff" offset="1.0" />
+                                 </stops>
+                              </LinearGradient>
+                           </textFill>
+                        </Label>
+                        <CheckBox fx:id="doLxPlotInputChB_FX" layoutX="653.0" layoutY="60.0" mnemonicParsing="false" />
+                        <Label layoutX="367.0" layoutY="89.0" prefHeight="32.0" prefWidth="175.0" text="Do LxPlot generation display:" textOverrun="WORD_ELLIPSIS">
+                           <font>
+                              <Font name="Calibri" size="14.0" />
+                           </font>
+                           <textFill>
+                              <LinearGradient endX="1.0" endY="0.8571428571428572" startX="0.7619047619047619" startY="1.0">
+                                 <stops>
+                                    <Stop color="BLACK" />
+                                    <Stop color="#0501ff" offset="1.0" />
+                                 </stops>
+                              </LinearGradient>
+                           </textFill>
+                        </Label>
+                        <CheckBox fx:id="doLxPlotGenChB_FX" layoutX="653.0" layoutY="92.0" mnemonicParsing="false" />
+                        <Button fx:id="generateBtn_FX" layoutX="363.0" layoutY="208.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="314.0" text="Generate" />
+                        <Label layoutX="365.0" layoutY="153.0" prefHeight="32.0" prefWidth="109.0" text="Weight type" textOverrun="WORD_ELLIPSIS">
+                           <font>
+                              <Font name="Calibri" size="14.0" />
+                           </font>
+                           <textFill>
+                              <LinearGradient endX="1.0" endY="0.7333333333333334" startX="0.3523809523809524" startY="1.0">
+                                 <stops>
+                                    <Stop color="BLACK" />
+                                    <Stop color="#0501ff" offset="1.0" />
+                                 </stops>
+                              </LinearGradient>
+                           </textFill>
+                        </Label>
+                        <ChoiceBox fx:id="weightTypeCoB_FX" layoutX="528.0" layoutY="155.0" prefWidth="150.0" />
+                        <Button fx:id="importInputsTXTBtn_FX" layoutX="76.0" layoutY="57.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="117.0" text="Import from Txt" />
+                        <Label layoutX="17.0" layoutY="217.0" prefHeight="22.0" prefWidth="99.0" text="Format attendu:">
+                           <font>
+                              <Font name="Open Sans" size="12.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="116.0" layoutY="220.0" prefHeight="14.0" prefWidth="215.0" text=" [inputName] [inputValue(&gt;0)]\n">
+                           <font>
+                              <Font name="Consolas Italic" size="12.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="errorGenTF_FX" layoutX="364.0" layoutY="251.0" prefHeight="18.0" prefWidth="312.0" textFill="#bf0404" />
+                        <Label fx:id="errorMaxboundTF_FX" layoutX="363.0" layoutY="269.0" prefHeight="18.0" prefWidth="314.0" textFill="#bf0404" />
+                        <Label fx:id="errorInputsTF_FX" layoutX="364.0" layoutY="287.0" prefHeight="18.0" prefWidth="312.0" textFill="#bf0404" />
+                        <Label layoutX="358.0" layoutY="323.0" prefHeight="18.0" prefWidth="108.0" text="Fichier de sortie" />
+                        <TextField fx:id="fileNameTF_FX" layoutX="516.0" layoutY="318.0" prefHeight="26.0" prefWidth="163.0" promptText="ex: nom.extention" />
+                        <CheckBox fx:id="doFileChB_FX" layoutX="452.0" layoutY="319.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="63.0" text="(y/n)">
+                           <font>
+                              <Font name="System Italic" size="12.0" />
+                           </font>
+                        </CheckBox>
+                        <Label fx:id="errorFileNameTF_FX" layoutX="364.0" layoutY="302.0" prefHeight="18.0" prefWidth="312.0" textFill="#bf0404" />
+                        <Button fx:id="genInputsBtn_FX" layoutX="224.0" layoutY="237.0" mnemonicParsing="false" text="Generate Inputs" />
+                        <TextField fx:id="maxBoundInputTF_FX" layoutX="17.0" layoutY="240.0" prefHeight="27.0" prefWidth="78.0" promptText="Max bound">
+                           <font>
+                              <Font name="Calibri" size="12.0" />
+                           </font>
+                        </TextField>
+                        <TextField fx:id="nbInputTF_FX" layoutX="103.0" layoutY="240.0" prefHeight="27.0" prefWidth="114.0" promptText="Number of inputs">
+                           <font>
+                              <Font name="Calibri" size="12.0" />
+                           </font>
+                        </TextField>
+                        <Label fx:id="inputBoundErrTF_FX" layoutX="18.0" layoutY="278.0" prefHeight="18.0" prefWidth="312.0" textFill="#bf0404" />
+                        <Label fx:id="errorNbInputTF_FX" layoutX="17.0" layoutY="299.0" prefHeight="18.0" prefWidth="314.0" textFill="#bf0404" />
+                        <Button fx:id="importInputsJSONBtn_FX" layoutX="201.0" layoutY="57.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="130.0" text="Import from JSON" />
+                        <Label fx:id="errorInputFormatTF_FX" layoutX="17.0" layoutY="323.0" prefHeight="18.0" prefWidth="314.0" textFill="#bf0404" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+            <Tab text="Display(Json)">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <ScrollPane layoutX="-1.0" prefHeight="363.0" prefWidth="691.0" AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="0.0">
+                           <content>
+                              <TextArea fx:id="displayTA_FX" editable="false" prefHeight="341.0" prefWidth="680.0" />
+                           </content>
+                        </ScrollPane>
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
+            <Tab text="Display Log">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <ScrollPane layoutX="-1.0" prefHeight="349.0" prefWidth="705.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <content>
+                              <TextArea fx:id="consoleLogTA_FX" prefHeight="347.0" prefWidth="703.0" />
+                           </content>
+                        </ScrollPane>
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
+        </tabs>
+      </TabPane>
+   </children>
+</AnchorPane>

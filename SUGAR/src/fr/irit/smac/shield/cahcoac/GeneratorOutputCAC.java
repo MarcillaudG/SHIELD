@@ -144,8 +144,8 @@ public class GeneratorOutputCAC {
 
     public void displayDataLxPlotGeneration(){
         int i;
-        //ChartType chartType = ChartType.SHAPE;
-        ChartType chartType = ChartType.BAR;
+        ChartType chartType = ChartType.SHAPE;
+        //ChartType chartType = ChartType.BAR;
 
 
         for(Map.Entry<String,Generation> g: data.entrySet()){
