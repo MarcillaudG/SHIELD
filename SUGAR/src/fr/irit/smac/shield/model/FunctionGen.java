@@ -11,9 +11,9 @@ import fr.irit.smac.shield.exceptions.TooMuchVariableToRemoveException;
 
 public class FunctionGen {
 
-	//Operateurs utilisable pour création aléatoire de la fonction
+
 	public enum Operator{ADD,SUB,MULT};
-	//Nb var que la fonction prendra en entrée
+
 	private int nbVar;
 
 	private Deque<Operator> operators;
@@ -35,27 +35,34 @@ public class FunctionGen {
 	 * @throws NotEnoughParametersException
 	 * 			when the number of parameter in xi is not enough
 	 */
-	public double compute(Deque<Double> xi) throws NotEnoughParametersException {
+	public double compute(Deque<Double> xi,Variable var) throws NotEnoughParametersException {
 		double res = 0.0;
-		if(xi.size()>0) {
-			if(xi.size() != this.operators.size()+1) {
-				throw new NotEnoughParametersException("ERROR COMPUTATION : XI : "+xi.size()+" OPERATORS : "+operators.size());
+		if(this.min != this.max) {
+			if(xi.size()>0) {
+				if(xi.size() != this.operators.size()+1) {
+					throw new NotEnoughParametersException("ERROR COMPUTATION : XI : "+xi.size()+" OPERATORS : "+operators.size());
+				}
+				res = xi.poll();
+				Deque<Operator> tmp = new ArrayDeque<Operator>(operators);
+				while(!xi.isEmpty()) {
+					res = operate(res,xi.poll(),tmp.poll());
+				}
 			}
-			res = xi.poll();
-			Deque<Operator> tmp = new ArrayDeque<Operator>(operators);
-			while(!xi.isEmpty()) {
-				res = operate(res,xi.poll(),tmp.poll());
-			}
-		}
-		this.lastValue = res;
-		//TODO vu que c'est maxOfFunction ( sans range ) ca marche pour les range differentes de 0.0 , 1.0 ?
-		if(Math.abs(this.maxOfFunction()) > 1.0) {
-			res = res / this.maxOfFunction();
+			// TODO REFACTOR
+			double sup = this.max;
+			double inf = this.min;
+			double mini = var.getMin();
+			double maxi = var.getMax();
+
+			double a = (maxi - mini)/(sup - inf);
+			double b = maxi - a *sup;
+			res = a*res+b;
+
+			this.lastValue = res;
 		}
 		return res;
 	}
 
-	//applique un opérateur poll2 pour inclure poll1 dans res
 	private double operate(double res, Double poll, Operator poll2) {
 		switch(poll2) {
 		case ADD:
@@ -105,7 +112,6 @@ public class FunctionGen {
 	 * @param nbVar
 	 * @param variables
 	 * @return the new Function
-	 * Depracated, use generateFunctionWithRange
 	 */
 	@Deprecated
 	public static FunctionGen generateFunction(int nbVar, Deque<String> variables) {
@@ -142,9 +148,8 @@ public class FunctionGen {
 	 * @param variables
 	 * @return the new Function
 	 */
-	public static FunctionGen generateFunctionWithRange(int nbVar, Deque<Variable> variables) {
+	public static FunctionGen generateFunctionWithRange(int nbVar, Deque<Variable> variables,double min,double max) {
 		Random rand = new Random();
-		//crée une queue contenant les noms de variables
 		Deque<String> nameOfVariables= new ArrayDeque<String>();
 		Deque<Variable> varTmp = new ArrayDeque<Variable>(variables);
 		while(!varTmp.isEmpty()) {
@@ -181,7 +186,7 @@ public class FunctionGen {
 	 * Function used to degrade a function
 	 * 
 	 * Construct a new function with some of the variables
-	 * and parameters removed
+	 * and parameters remove
 	 * 
 	 * @param function
 	 * 			the function to degrade
@@ -198,10 +203,10 @@ public class FunctionGen {
 		if(nbToRemove > function.getVariables().size()) {
 			throw new TooMuchVariableToRemoveException("Error in degradeFunction : "+nbToRemove+ " asked to remove but only "+function.getVariables().size() + " are availables");
 		}
-		// Collections used to remove randomly <
+		// Collections used to remove randomly 
 		List<String> queVariableTmp = new ArrayList<String>(function.variables);
 		List<Operator> queOperatorsTmp = new ArrayList<Operator>(function.operators);
-		//TODO queOperatorsTmp sert a quoi? non utilisé juste copié. aussi la fonction dégradé a moins de variables mais autant d'operateurs, probleme dans compute
+
 		for(int i = 0 ; i < nbToRemove; i++) {
 			int toRemove = rand.nextInt(queVariableTmp.size());
 			queVariableTmp.remove(toRemove);
@@ -264,7 +269,7 @@ public class FunctionGen {
 
 	/**
 	 * Set the maximum that the function can have
-	 * Computes the function but uses max and min accordingly instead of the value of variables
+	 * 
 	 */
 	private void maxOfFunctionWithRange(Deque<Variable> values) {
 		if(values.isEmpty()) {
@@ -277,7 +282,7 @@ public class FunctionGen {
 			while(!tmp.isEmpty()) {
 				Operator ope = tmp.poll();
 				Variable var = valuesTmp.poll();
-				if(ope == Operator.SUB) {
+				if(ope.equals(Operator.SUB)) {
 					res = operate(res,var.getMin(),ope);
 				}
 				else {
@@ -290,7 +295,7 @@ public class FunctionGen {
 
 	/**
 	 * Set the maximum that the function can have
-	 * Computes the function but uses max and min accordingly instead of the value of variables
+	 * 
 	 */
 	private void minOfFunctionWithRange(Deque<Variable> values) {
 		if(values.isEmpty()) {
@@ -303,7 +308,7 @@ public class FunctionGen {
 			while(!tmp.isEmpty()) {
 				Operator ope = tmp.poll();
 				Variable var = valuesTmp.poll();
-				if(ope == Operator.SUB) {
+				if(ope.equals(Operator.SUB)) {
 					res = operate(res,var.getMax(),ope);
 				}
 				else {
