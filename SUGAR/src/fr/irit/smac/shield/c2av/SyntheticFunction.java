@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
+import java.util.TreeSet;
 
 import fr.irit.smac.shield.exceptions.NotEnoughParametersException;
 import fr.irit.smac.shield.exceptions.TooMuchVariableToRemoveException;
@@ -18,6 +20,8 @@ public class SyntheticFunction {
 	private Deque<Operator> operators;
 
 	private Deque<String> operands;
+	
+	private Set<String> operandsRemoved;
 
 	private double lastValue;
 
@@ -26,6 +30,7 @@ public class SyntheticFunction {
 	public SyntheticFunction(String name,GeneratorOfFunction gen) {
 		this.name = name;
 		this.generator = gen;
+		this.operandsRemoved = new TreeSet<String>();
 
 		init();
 	}
@@ -34,6 +39,7 @@ public class SyntheticFunction {
 		this.name = name2;
 		this.operands = operands;
 		this.generator = gen;
+		this.operandsRemoved = new TreeSet<String>();
 		initOperators();
 	}
 
@@ -43,6 +49,7 @@ public class SyntheticFunction {
 		this.operands = operands;
 		this.operators = operators;
 		this.generator = gen;
+		this.operandsRemoved = new TreeSet<String>();
 	}
 
 
@@ -59,7 +66,7 @@ public class SyntheticFunction {
 		int nbVar = this.operands.size();
 		Random rand = new Random();
 		for(int i = 0 ; i < nbVar-1; i++) {
-			switch(rand.nextInt(3)) {
+			switch(rand.nextInt(2)) {
 			case 0:
 				this.operators.push(Operator.ADD);
 				break;
@@ -90,7 +97,12 @@ public class SyntheticFunction {
 		res = this.generator.getValueOfVariable(xi.poll());
 		Deque<Operator> tmp = new ArrayDeque<Operator>(operators);
 		while(!xi.isEmpty()) {
-			res = operate(res,this.generator.getValueOfVariable(xi.poll()),tmp.poll());
+			String var = xi.poll();
+			double value =this.generator.getValueOfVariable(var); 
+			if(this.operandsRemoved.contains(var)) {
+				value = this.generator.getWorstCaseValue(var);
+			}
+			res = operate(res,value,tmp.poll());
 		}
 		this.lastValue = res;
 		return res;
@@ -136,13 +148,20 @@ public class SyntheticFunction {
 		// Collections used to remove randomly 
 		List<String> queVariableTmp = new ArrayList<String>(this.operands);
 		List<Operator> queOperatorsTmp = new ArrayList<Operator>(this.operators);
+		Set<String> opToRemove = new TreeSet<String>();
 
 		for(int i = 0 ; i < nbToRemove; i++) {
 			int toRemove = rand.nextInt(queVariableTmp.size());
-			queVariableTmp.remove(toRemove);
+			opToRemove.add(queVariableTmp.remove(toRemove));
 		}
-		SyntheticFunction degraded = new SyntheticFunction(this.name,this.generator, new ArrayDeque<String>(queVariableTmp), new ArrayDeque<Operator>(queOperatorsTmp));
+		SyntheticFunction degraded = new SyntheticFunction(this.name,this.generator, new ArrayDeque<String>(this.operands), new ArrayDeque<Operator>(queOperatorsTmp));
+		degraded.setOpRemoved(opToRemove);
 		return degraded;
+	}
+
+	private void setOpRemoved(Set<String> opToRemove) {
+		this.operandsRemoved = opToRemove;
+		
 	}
 
 	/**

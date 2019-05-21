@@ -217,4 +217,12 @@ public class Generator {
 	public double getValueOfH(String var) {
 		return this.variables.get(var).getFun().getLastValue();
 	}
+
+	public double getWorstCaseValue(String var) {
+		Variable v = this.variables.get(var);
+		double vmax = Math.abs(v.getValue()-v.getMax());
+		double vmin = Math.abs(v.getValue()-v.getMin());
+		
+		return vmax > vmin ? v.getMax() : v.getMin();
+	}
 }

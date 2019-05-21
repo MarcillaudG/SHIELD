@@ -82,4 +82,9 @@ public class GeneratorOfFunction {
 		return this.generator.getValueOfVariable(poll);
 	}
 
+	public double getWorstCaseValue(String var) {
+		return this.generator.getWorstCaseValue(var);
+		
+	}
+
 }
