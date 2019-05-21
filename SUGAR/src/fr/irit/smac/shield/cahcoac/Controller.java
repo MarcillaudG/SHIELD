@@ -3,6 +3,7 @@ package fr.irit.smac.shield.cahcoac;
 import fr.irit.smac.shield.cahcoac.Function.NormalisedWeightedSum;
 import fr.irit.smac.shield.cahcoac.Function.OutputFunction;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -100,6 +101,9 @@ public class Controller implements Initializable {
     @FXML
     private ProgressBar progBar_FX;
 
+    @FXML
+    private Tab tabError_FX;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         weightTypeCoB_FX.getItems().clear();
@@ -138,6 +142,12 @@ public class Controller implements Initializable {
             }
         });
 
+        tabError_FX.setOnSelectionChanged(new EventHandler<Event>() {
+            @Override
+            public void handle(Event event) {
+                tabError_FX.setStyle("-tab-text-color: black;");
+            }
+        });
         //tabPane_FX.setTabMinWidth(33);
 
     }
@@ -208,6 +218,7 @@ public class Controller implements Initializable {
         if(!isPositiveDouble(inputBound_s) || !isPositiveInteger(nbInput_s)) {
             if (!isPositiveDouble(inputBound_s)) inputBoundErrTF_FX.setText("Input bound must be a positive double");
             if (!isPositiveInteger(nbInput_s)) errorNbInputTF_FX.setText("Nb input must be a positive integer");
+            tabError_FX.setStyle("-tab-text-color: red;");
         } else {
             nbInput = Integer.parseInt(nbInput_s);
             inputBound = Double.parseDouble(inputBound_s);
@@ -215,7 +226,6 @@ public class Controller implements Initializable {
                 inputTA_FX.setText(inputTA_FX.getText().trim()+"\nautoGenInput"+i+" "+inputBound);
             }
         }
-
     }
 
     private void generate(){
@@ -231,7 +241,7 @@ public class Controller implements Initializable {
         Map<String,Double> in = new HashMap<>();
         double maxBound;
         int nbGen;
-        GeneratorInputCAC genIn;
+        GeneratorInput genIn;
         GeneratorOutputCAC genOut;
         errorInputsTF_FX.setText("");
         errorGenTF_FX.setText("");
@@ -243,6 +253,7 @@ public class Controller implements Initializable {
             if (!isValidInputs(inputs)) errorInputsTF_FX.setText("Error in input format.");
             if (doFile && !isValidFileName(fileName)) errorFileNameTF_FX.setText("FileName not valid");
             progBar_FX.setProgress(ProgressBar.INDETERMINATE_PROGRESS);
+            tabError_FX.setStyle("-tab-text-color: red;");
         } else {
             maxBound = Double.parseDouble(maxBound_S);
             nbGen = Integer.parseInt(nbGen_s);
@@ -257,10 +268,10 @@ public class Controller implements Initializable {
 
             //##############################################################################################################
             //initialisation du générateur d'input (entrées/indicateurs)
-            genIn = new GeneratorInputCAC();
+            genIn = new GeneratorInput();
             //initialisation du generateur avec leses indicateurs du preset
             for (Map.Entry<String,Double> e:in.entrySet()) {
-                genIn.initVariableWithRange(e.getKey(),0.0,e.getValue());
+                genIn.initVariableWithRange(e.getKey(),0,e.getValue());
             }
 
             //##############################################################################################################
@@ -296,7 +307,7 @@ public class Controller implements Initializable {
             //##############################################################################################################
             //write JSON to file
             if(doFile) {
-                try (FileWriter file = new FileWriter(fileName)) {
+                try (FileWriter file = new FileWriter(fileName+".json")) {
                     file.write(genOut.dataToJSON());
                     file.flush();
                     System.out.println("File Saved: "+fileName);
@@ -318,6 +329,13 @@ public class Controller implements Initializable {
     private boolean isPositiveDouble(String s){
         String regex = "^(-?)(0|([1-9][0-9]*))(\\.[0-9]+)?$";
         return s.matches(regex);
+    }
+
+    private boolean isValidInputBoundTmp(String s){
+        if(isPositiveDouble(s)){
+            return Double.parseDouble(s) >= 2.0;
+        }
+        return false;
     }
 
     private boolean isPositiveInteger(String s){

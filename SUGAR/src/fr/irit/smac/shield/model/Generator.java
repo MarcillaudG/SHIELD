@@ -24,9 +24,9 @@ public class Generator {
 
 	public static double MAX_VAR = 1.0;
 
-	private Map<String,Variable> variables;
+	protected Map<String,Variable> variables;
 
-	private int nbVar;
+	protected int nbVar;
 
 	public Generator() {
 		NB_MAX_VAR = 10;
@@ -84,7 +84,7 @@ public class Generator {
 		try {
 			resFun = h.compute(xi,var);
 
-			double secop = Math.log(Math.abs(variable -resFun));
+			double secop = Math.log(Math.abs(variable - resFun));
 
 			double denom = secop+max;
 
@@ -112,7 +112,7 @@ public class Generator {
 	 * @param variable
 	 */
 	@Deprecated
-	private void initVariable(String variable) {
+	public void initVariable(String variable) {
 		List<String> variablesRemaining = new ArrayList<String>(this.variables.keySet());
 
 		Variable v = new Variable(variable,MIN_VAR,MAX_VAR);
@@ -138,7 +138,7 @@ public class Generator {
 	 * Create a new variable and construct the corresponding function
 	 * @param variable
 	 */
-	private void initVariableWithRange(String variable, double min, double max) {
+	public void initVariableWithRange(String variable, double min, double max) {
 		List<String> variablesRemaining = new ArrayList<String>(this.variables.keySet());
 
 		Variable v = new Variable(variable,min,max);

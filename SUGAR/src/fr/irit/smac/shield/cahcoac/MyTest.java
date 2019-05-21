@@ -1,7 +1,5 @@
 package fr.irit.smac.shield.cahcoac;
 
-import fr.irit.smac.lxplot.LxPlot;
-import fr.irit.smac.lxplot.commons.ChartType;
 import fr.irit.smac.shield.cahcoac.Function.NormalisedWeightedSum;
 import fr.irit.smac.shield.cahcoac.Function.OutputFunction;
 
@@ -48,10 +46,10 @@ public class MyTest {
 
         //##############################################################################################################
         //initialisation du générateur d'input (entrées/indicateurs)
-        GeneratorInputCAC genIn = new GeneratorInputCAC();
+        GeneratorInput genIn = new GeneratorInput();
         //initialisation du generateur avec leses indicateurs du preset
         for (Map.Entry<String, Double> e : entryPreset.entrySet()) {
-            genIn.initVariableWithRange(e.getKey(), 0.0, e.getValue());
+            genIn.initVariableWithRange(e.getKey(), 2.0, 4.0);
         }
 
         //##############################################################################################################

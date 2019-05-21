@@ -12,3 +12,10 @@
     -fx-opacity: 0.6;
 }
 
+.root {
+    -tab-text-color: -fx-text-base-color ;
+}
+
+.tab-label {
+    -fx-text-fill: -tab-text-color ;
+}

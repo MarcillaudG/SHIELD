@@ -158,12 +158,16 @@ public class GeneratorOutputCAC {
             for(Map.Entry<String,Double> w: weights.entrySet()){
                 LxPlot.getChart(genName,chartType).add("Weights(%)",i++,w.getValue());
             }
+            i=0;
+            for(Map.Entry<String,Double> w: weights.entrySet()){
+                LxPlot.getChart(genName,chartType).add("Zero Line",i++,0);
+            }
         }
     }
 
     public void displayDataLxPlotInput(){
         int i=0;
-        ChartType chartType = ChartType.SHAPE;
+        ChartType chartType = ChartType.LINE;
 
         for(Map.Entry<String,Generation> g: data.entrySet()){
             for(Map.Entry<String,Variable> v : g.getValue().getInput().entrySet()){
@@ -172,6 +176,10 @@ public class GeneratorOutputCAC {
             for(Map.Entry<String,Double> w: weights.entrySet()){
                 LxPlot.getChart(w.getKey(),chartType).add("Weights(%)",i,w.getValue());
             }
+            for(Map.Entry<String,Double> w: weights.entrySet()){
+                LxPlot.getChart(w.getKey(),chartType).add("Zero Line",i,0);
+            }
+
             i++;
         }
     }

@@ -6,7 +6,7 @@ import fr.irit.smac.shield.model.Variable;
 
 import java.util.*;
 
-public class GeneratorInputCAC {
+public class GeneratorInputOld {
 
     /**
      * Singleton or intern class
@@ -23,12 +23,12 @@ public class GeneratorInputCAC {
 
     private int nbVar;
 
-    public GeneratorInputCAC() {
+    public GeneratorInputOld() {
         NB_MAX_VAR = 1000;
         init();
     }
 
-    public GeneratorInputCAC(int nbVarMax) {
+    public GeneratorInputOld(int nbVarMax) {
         NB_MAX_VAR = nbVarMax;
         init();
     }
@@ -44,24 +44,24 @@ public class GeneratorInputCAC {
     /**
      * Return the value calculated by the function of the variable
      *
-     * @param variable
-     * 		The value of the variable
-     * @param h
-     * 		the function
+     * @param var
+     * 		the variable
      * @param xi
      * 		the parameters of the function
-     * @param min
-     * 		the minimal value (of the output??)
-     * @param max
-     * 		the maximal value (of the output??)
      * @return the new value of the variable
      */
-    private double calculValueOfVariable(double variable, FunctionGen h, Deque<Double> xi, double min, double max) {
+    private double calculValueOfVariable(Variable var, Deque<Double> xi) {
+        // TODO REFACTOR
+        double variable = var.getValue();
+        FunctionGen h = var.getFun();
+        double max = var.getMax();
+        double min = var.getMin();
+
         double res = variable;
         // resultat de la fonction
         double resFun;
         try {
-            resFun = h.compute(xi);
+            resFun = h.compute(xi,var);
             //System.out.println("RESFUN : "+resFun);
 
             //log version
@@ -99,9 +99,6 @@ public class GeneratorInputCAC {
      * @return the value
      */
     public double getValueOfVariableAfterCalcul(String variable) {
-        if(!this.variables.keySet().contains(variable)) {
-            initVariableWithRange(variable);
-        }
         Variable var = this.variables.get(variable);
 
         Deque<Double> values = new ArrayDeque<Double>();
@@ -109,26 +106,11 @@ public class GeneratorInputCAC {
         while(!paramTmp.isEmpty()) {
             values.offer(this.variables.get(paramTmp.poll()).getValue());
         }
-        double res = calculValueOfVariable(var.getValue(), var.getFun(), values, var.getMin(), var.getMax());
+        double res = calculValueOfVariable(var, values);
         //System.out.println("DIFF : "+(this.variables.get(variable).getValue()-res));
         this.variables.get(variable).setValue(res);
         return res;
     }
-
-    public double getValueOfVariableAfterCalculWithGaussianNoise(String variable) {
-        //En chantier
-        Variable var = this.variables.get(variable);
-        Random rand = new Random();
-        Double res = 0.0;
-        Double mid = (var.getMin()+(var.getMax()- var.getMin())/2);
-        Double distToMid = Math.abs(var.getValue() - mid);
-        res = res + rand.nextGaussian()*distToMid*1.5+mid;
-        if(res>var.getMax()) res = var.getMax();
-        else if(res < var.getMin()) res = var.getMin();
-        this.variables.get(variable).setValue(res);
-        return res;
-    }
-
 
     public double getValueOfVariableAfterCalculWithNoise(String variable) {
         Double res =0.0;
@@ -196,7 +178,7 @@ public class GeneratorInputCAC {
             variablesRemaining.remove(param);
             variablesRemaining.removeAll(var.getFun().getVariables());
         }
-        v.setFun(FunctionGen.generateFunctionWithRange(parameters.size(), parameters));
+        v.setFun(FunctionGen.generateFunctionWithRange(parameters.size(), parameters,MIN_VAR,MAX_VAR));
 
         this.variables.put(variable,v);
 
@@ -224,7 +206,7 @@ public class GeneratorInputCAC {
             variablesRemaining.remove(param);
             variablesRemaining.removeAll(var.getFun().getVariables());
         }
-        v.setFun(FunctionGen.generateFunctionWithRange(parameters.size(), parameters));
+        v.setFun(FunctionGen.generateFunctionWithRange(parameters.size(), parameters,minBound,maxBound));
 
         this.variables.put(variable,v);
 

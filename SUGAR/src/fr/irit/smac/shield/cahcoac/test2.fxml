@@ -12,11 +12,14 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.InnerShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.LinearGradient?>
 <?import javafx.scene.paint.Stop?>
@@ -209,25 +212,29 @@
                                     </Label>
                                     <HBox prefHeight="26.0" prefWidth="319.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
                                        <children>
-                                          <CheckBox fx:id="doFileChB_FX" mnemonicParsing="false" prefHeight="26.0" prefWidth="63.0" text="(y/n)">
+                                          <CheckBox fx:id="doFileChB_FX" mnemonicParsing="false" prefHeight="26.0" prefWidth="63.0" text="(y/n)" textOverrun="CLIP">
                                              <font>
                                                 <Font name="System Italic" size="12.0" />
                                              </font>
                                           </CheckBox>
-                                          <TextField fx:id="fileNameTF_FX" prefHeight="26.0" prefWidth="120.0" promptText="ex: nom.extention" />
+                                          <TextField fx:id="fileNameTF_FX" prefHeight="26.0" prefWidth="120.0" promptText="File name" />
                                        </children>
                                     </HBox>
                                     <Label prefHeight="18.0" prefWidth="108.0" text="Fichier de sortie" GridPane.rowIndex="7" />
                                  </children>
                               </GridPane>
                               <Separator layoutX="253.0" orientation="VERTICAL" prefHeight="428.0" prefWidth="5.0" />
-                              <Button fx:id="generateBtn_FX" layoutX="335.0" layoutY="282.0" mnemonicParsing="false" prefHeight="47.0" prefWidth="231.0" text="Generate" />
-                              <Button fx:id="importInputsJSONBtn_FX" layoutX="334.0" layoutY="349.0" mnemonicParsing="false" prefHeight="46.0" prefWidth="232.0" text="Import from JSON" />
-                              <ProgressBar fx:id="progBar_FX" layoutX="334.0" layoutY="329.0" prefHeight="20.0" prefWidth="231.0">
-                                 <effect>
-                                    <InnerShadow color="#0808d3" />
-                                 </effect>
-                              </ProgressBar>
+                              <VBox layoutX="329.8999938964844" layoutY="278.8999938964844">
+                                 <children>
+                                    <Button fx:id="generateBtn_FX" mnemonicParsing="false" prefHeight="47.0" prefWidth="231.0" text="Generate" />
+                                    <ProgressBar fx:id="progBar_FX" prefHeight="20.0" prefWidth="231.0">
+                                       <effect>
+                                          <InnerShadow color="#0808d3" />
+                                       </effect>
+                                    </ProgressBar>
+                                    <Button fx:id="importInputsJSONBtn_FX" mnemonicParsing="false" prefHeight="46.0" prefWidth="232.0" text="Import from JSON" />
+                                 </children>
+                              </VBox>
                            </children>
                         </AnchorPane>
                      </children>
@@ -252,13 +259,13 @@
                   </ScrollPane>
               </content>
             </Tab>
-            <Tab text="Error log">
+            <Tab id="tabError_FX" fx:id="tabError_FX" text="Error log &amp; Info">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <ScrollPane prefHeight="455.0" prefWidth="652.0">
-                           <content>
-                              <VBox prefHeight="81.0" prefWidth="385.0">
+                        <VBox alignment="CENTER" prefHeight="430.0" prefWidth="652.0">
+                           <children>
+                              <VBox alignment="CENTER" prefHeight="90.0" prefWidth="652.0">
                                  <children>
                                     <Label fx:id="errorNbInputTF_FX" prefHeight="18.0" prefWidth="314.0" textFill="#bf0404" />
                                     <Label fx:id="inputBoundErrTF_FX" prefHeight="18.0" prefWidth="312.0" textFill="#bf0404" />
@@ -269,8 +276,27 @@
                                     <Label fx:id="errorFileNameTF_FX" prefHeight="18.0" prefWidth="312.0" textFill="#bf0404" />
                                  </children>
                               </VBox>
-                           </content>
-                        </ScrollPane>
+                              <TextArea prefHeight="312.0" prefWidth="652.0" text="Info:&#10;Input format:  [inputName] [inputValue(&gt;=2)]\n&#10;ex:  &#10;     in1 100&#10;     in2  50&#10;     in3 100&#10;&#10;The max bound for inputs needs to be 2 or greater otherwise the output might not be bounded.&#10;&#10;&#10;&#10;&#10;&#10;&#10;Name of generator: STRUDEL Generator (SyntheTic geneRator of continUous Data for wEight Learning" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
+            <Tab text="About">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <StackPane prefHeight="433.0" prefWidth="652.0">
+                           <children>
+                              <ImageView fitHeight="437.0" fitWidth="651.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@icon.png" />
+                                 </image>
+                              </ImageView>
+                              <TextArea opacity="0.36" prefHeight="354.0" prefWidth="573.0" text="&#10;Logiciel de génération de données bornées cohérentes dans le temps pondérée associées a une  valeur de sortie bornée&#10;&#10;Développé par:&#10;SHIELD Generator:    Guilhem Marcillaud&#10;STRUDEL Generator: Michael Geraedts-Muse&#10;&#10;Développé pour NéoCampus au sein de l'équipe SMAC." wrapText="true" />
+                           </children>
+                        </StackPane>
                      </children>
                   </AnchorPane>
               </content>
