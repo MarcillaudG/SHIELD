@@ -254,7 +254,7 @@
               <content>
                   <ScrollPane prefHeight="349.0" prefWidth="705.0">
                      <content>
-                        <TextArea fx:id="consoleLogTA_FX" prefHeight="433.0" prefWidth="651.0" />
+                        <TextArea fx:id="consoleLogTA_FX" editable="false" prefHeight="433.0" prefWidth="651.0" />
                      </content>
                   </ScrollPane>
               </content>
@@ -276,7 +276,7 @@
                                     <Label fx:id="errorFileNameTF_FX" prefHeight="18.0" prefWidth="312.0" textFill="#bf0404" />
                                  </children>
                               </VBox>
-                              <TextArea prefHeight="312.0" prefWidth="652.0" text="Info:&#10;Input format:  [inputName] [inputValue(&gt;=2)]\n&#10;ex:  &#10;     in1 100&#10;     in2  50&#10;     in3 100&#10;&#10;The max bound for inputs needs to be 2 or greater otherwise the output might not be bounded.&#10;&#10;&#10;&#10;&#10;&#10;&#10;Name of generator: STRUDEL Generator (SyntheTic geneRator of continUous Data for wEight Learning" />
+                              <TextArea prefHeight="312.0" prefWidth="652.0" text="Info:&#10;Input format:  [inputName] [inputValue(&gt;=2)]\n&#10;ex:  &#10;     in1 100&#10;     in2  50&#10;     in3 100&#10;&#10;The max bound for inputs needs to be 2 or greater otherwise the output might not be bounded.&#10;&#10;&#10;&#10;&#10;&#10;" />
                            </children>
                         </VBox>
                      </children>
@@ -294,7 +294,7 @@
                                     <Image url="@icon.png" />
                                  </image>
                               </ImageView>
-                              <TextArea opacity="0.36" prefHeight="354.0" prefWidth="573.0" text="&#10;Logiciel de génération de données bornées cohérentes dans le temps pondérée associées a une  valeur de sortie bornée&#10;&#10;Développé par:&#10;SHIELD Generator:    Guilhem Marcillaud&#10;STRUDEL Generator: Michael Geraedts-Muse&#10;&#10;Développé pour NéoCampus au sein de l'équipe SMAC." wrapText="true" />
+                              <TextArea editable="false" opacity="0.36" prefHeight="354.0" prefWidth="573.0" text="&#10;Logiciel de génération de données bornées cohérentes dans le temps pondérée associées a une  valeur de sortie bornée&#10;&#10;Développé par:&#10;SHIELD Generator:    Guilhem Marcillaud&#10;STRUDEL Generator: Michael Geraedts-Muse&#10;&#10;Développé pour NéoCampus au sein de l'équipe SMAC.&#10;&#10;Name of generator: STRUDEL Generator (SyntheTic geneRator of continUous Data for wEight Learning" wrapText="true" />
                            </children>
                         </StackPane>
                      </children>

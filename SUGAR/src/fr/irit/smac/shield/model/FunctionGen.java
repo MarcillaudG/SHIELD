@@ -98,7 +98,6 @@ public class FunctionGen {
 	 * 
 	 * @param nbVar
 	 * @param variables
-	 * @param queOperatorsTmp
 	 */
 	public FunctionGen(int nbVar, Deque<String> variables, Deque<Operator> operators) {
 		this.nbVar = nbVar;
@@ -121,7 +120,7 @@ public class FunctionGen {
 		res.min = 0.0;
 
 		for(int i = 0 ; i < nbVar-1; i++) {
-			switch(rand.nextInt(3)) {
+			switch(rand.nextInt(2)) {
 			case 0:
 				res.addOperator(Operator.ADD);
 				break;
