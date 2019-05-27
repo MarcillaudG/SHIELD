@@ -157,7 +157,7 @@ public class FunctionGen {
 		FunctionGen res = new FunctionGen(nbVar,nameOfVariables);
 
 		for(int i = 0 ; i < nbVar-1; i++) {
-			switch(rand.nextInt(3)) {
+			switch(rand.nextInt(2)) {
 			case 0:
 				res.addOperator(Operator.ADD);
 				break;
@@ -318,4 +318,31 @@ public class FunctionGen {
 		}
 	}
 
+	@Override
+	public String toString() {
+		String ret = "Function:[";
+		Deque<String> tmpVar = new ArrayDeque<>(variables);
+		String op_s;
+		System.out.println(tmpVar.toString());
+
+		ret += tmpVar.poll();
+
+		for (Operator op: operators) {
+			switch(op) {
+				case ADD:
+					 ret += "+";
+					 break;
+				case MULT:
+					 ret += "*";
+					 break;
+				case SUB:
+					 ret += "-";
+					 break;
+				default:
+			}
+			ret+=tmpVar.pollFirst();
+		}
+		ret+="]";
+		return ret;
+	}
 }

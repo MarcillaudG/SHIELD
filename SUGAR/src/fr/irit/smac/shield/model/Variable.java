@@ -69,11 +69,15 @@ public class Variable {
 		this.fun = fun;
 	}
 
+	double map(double x, double in_min, double in_max, double out_min, double out_max)
+	{
+		return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+	}
+
 	@Override
 	public String toString() {
 		//return "Variable [name=" + name + ", min=" + min + ", max=" + max + ", value=" + value+"]";
-        double percentMax = (value/max)*100;
-        return String.format("Variable [name=%-25s], min=%8.3f, max=%8.3f, value=%8.3f \t [%5.1f%%]",name, min, max, value,percentMax);
+        return String.format("Variable [name=%-25s], min=%8.3f, max=%8.3f, value=%8.3f, percent=%8.3f",name, min, max, value, map(value,min,max,0,100));
 	}
 	
 	
