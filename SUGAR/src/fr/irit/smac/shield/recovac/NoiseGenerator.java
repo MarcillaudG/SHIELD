@@ -8,9 +8,10 @@ import fr.irit.smac.shield.model.Variable;
 public class NoiseGenerator extends RecovacGenerator{
 	protected List<Double> variablesNoise;
 	protected double noise;
+	protected double totalNoise;
 	
 	public NoiseGenerator(int _nbSituations, int _nbVariables) {
-		super(_nbSituations, _nbVariables);
+		super(_nbSituations, _nbVariables, _nbVariables);
 		this.init();
 	}
 	
@@ -25,7 +26,7 @@ public class NoiseGenerator extends RecovacGenerator{
 	 * 		the type of the situation to which the variable belongs
 	 */
 	public void generateAllValuesAfterNoise(boolean type) {
-		int maxChange = numberV+1;
+		int maxChange = numberCV+1;
 		int nbChange = this.rand.nextInt(maxChange);
 		List<Variable> variablesPossiblyChange = new ArrayList<Variable>();
 		double auxValue;

@@ -23,9 +23,11 @@ public class Generator {
 
 	public static double MIN_VAR = 0.0;
 
-	public static double MAX_VAR = 1.0;
+	public static double MAX_VAR = 10.0;
 
 	protected Map<String,Variable> variables; 
+	
+	protected Map<String,Variable> variablesActionState;
 
 	protected int nbVar;
 	
@@ -61,10 +63,17 @@ public class Generator {
 
 		Deque<Double> values = new ArrayDeque<Double>();
 		Deque<String> paramTmp = new ArrayDeque<String>(var.getFun().getVariables());
+		
 		while(!paramTmp.isEmpty()) {
-			values.offer(this.variables.get(paramTmp.poll()).getValue());
+			String auxparam = paramTmp.poll();
+			if (auxparam.contains("Context V")) {
+				values.offer(this.variables.get(auxparam).getValue());
+			}
+			else {
+				values.offer(this.variablesActionState.get(auxparam).getValue());
+			}
 		}
-		//double res = calculValueOfVariable(var.getValue(), var.getFun(), values, var.getMin(), var.getMax());
+		
 		double res = calculValueOfVariable(var,values);
 		this.variables.get(variable).setValue(res);
 		return res;
@@ -85,7 +94,6 @@ public class Generator {
 			resFun = h.compute(xi,var);
 
 			double secop = Math.log(Math.abs(variable -resFun));
-
 			double denom = secop+max;
 
 			if(resFun == 0.0) {
@@ -101,11 +109,16 @@ public class Generator {
 				}
 			}
 			this.h.add(resFun);
-			//System.out.println(this.h.size());
 		} catch (NotEnoughParametersException e) {
 			e.printStackTrace();
 		}
 		
+		/*if (res < MIN_VAR) {
+			res = MIN_VAR;
+		}
+		else if (res > MAX_VAR) {
+			res = MAX_VAR;
+		}*/
 		return res;
 	}
 
@@ -172,8 +185,6 @@ public class Generator {
 		System.out.println(variable.getName()+ " " + variable.getFun().getVariables() + variable.getFun().getOperators());
 	}
 	
-	
-
 	@Deprecated
 	public void initVariable() {
 		this.initVariable("Variable"+this.nbVar);
@@ -234,6 +245,5 @@ public class Generator {
 		for(String s : this.variables.keySet()) {
 			System.out.println(this.variables.get(s).getFun().getLastValue());
 		}
-
 	}
 }

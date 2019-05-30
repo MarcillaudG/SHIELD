@@ -326,4 +326,7 @@ public class FunctionGen {
 		}
 	}
 
+	public int getNbInflu() {
+		return this.variables.size();
+	}
 }

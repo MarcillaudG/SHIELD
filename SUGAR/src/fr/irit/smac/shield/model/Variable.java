@@ -14,6 +14,8 @@ public class Variable {
 	private double value;
 	
 	private FunctionGen fun;
+	
+
 
 	public Variable(String name, double min, double max, double value) {
 		this.name = name;
