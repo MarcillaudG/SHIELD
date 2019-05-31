@@ -89,13 +89,12 @@ public class Generator {
 		double res = variable;
 		// resultat de la fonction
 		double resFun;
-		
 		try {
 			resFun = h.compute(xi,var);
 
 			double secop = Math.log(Math.abs(variable -resFun));
 			double denom = secop+max;
-
+			
 			if(resFun == 0.0) {
 				res = min + new Random().nextDouble()*(max-min);
 			}
@@ -112,13 +111,6 @@ public class Generator {
 		} catch (NotEnoughParametersException e) {
 			e.printStackTrace();
 		}
-		
-		/*if (res < MIN_VAR) {
-			res = MIN_VAR;
-		}
-		else if (res > MAX_VAR) {
-			res = MAX_VAR;
-		}*/
 		return res;
 	}
 

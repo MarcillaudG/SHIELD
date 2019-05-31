@@ -10,6 +10,9 @@ import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
 
+import fr.irit.smac.lxplot.LxPlot;
+import fr.irit.smac.lxplot.commons.ChartType;
+import fr.irit.smac.lxplot.interfaces.ILxPlotChart;
 import fr.irit.smac.shield.exceptions.NotEnoughParametersException;
 import fr.irit.smac.shield.model.FunctionGen;
 import fr.irit.smac.shield.model.Generator;
@@ -21,8 +24,6 @@ public class RecovacGenerator extends Generator {
 	protected int numberAV;
 	protected int nbVarC;
 	protected int nbVarA;
-	public static double MIN_VARAS = -10.0;
-	public static double MAX_VARAS = 10.0;
 	protected List<Float> totalNoiseS1;
 	protected List<Float> totalNoiseS2;
 	protected List<Variable> variablesAInitialized;
@@ -95,12 +96,11 @@ public class RecovacGenerator extends Generator {
 	 * 		the variable name
 	 */
 	protected void initVariable(String variable) {
+		Variable v = new Variable(variable, MIN_VAR, MAX_VAR);
 		if (variable.contains("Context V")) {
-			Variable v = new Variable(variable, MIN_VAR, MAX_VAR);
 			this.variablesCInitialized.add(v);
 		} 
 		else {
-			Variable v = new Variable(variable, MIN_VARAS, MAX_VARAS);
 			this.variablesAInitialized.add(v);
 		}
 	}
@@ -246,6 +246,10 @@ public class RecovacGenerator extends Generator {
 		
 		System.out.println(" \nThresholde 1= " + thresholde1 + " Thresholde 2= " + thresholde2 + "\n");
 		this.printSituationTuple();
+		
+		this.displayDeviationWithThresholde(1, thresholde1, this.totalNoiseS1);
+		this.displayDeviationWithThresholde(2,thresholde2, this.totalNoiseS2);
+			
 	}
 	
 	/**
@@ -291,22 +295,26 @@ public class RecovacGenerator extends Generator {
 		this.variablesObserved2 = epsilonFunc.getVariablesObserved2();
 		maxOb1 = epsilonFunc.getMaxValueList(variablesObserved1);
 		maxOb2 = epsilonFunc.getMaxValueList(variablesObserved2);
-		minOb1 = epsilonFunc.getMinValueList(variablesObserved1, maxOb1); 
-		minOb2 = epsilonFunc.getMinValueList(variablesObserved2, maxOb2); 
+		minOb1 = epsilonFunc.getMinValueList(variablesObserved1); 
+		minOb2 = epsilonFunc.getMinValueList(variablesObserved2); 
 		
 		for(int i = 0; i < this.variablesObserved1.size(); i++) {
-			this.normalize(this.variablesObserved1.get(i), MAX_VAR, MIN_VAR, minOb1, maxOb1);
+			double aux1 = this.normalize(this.variablesObserved1.get(i), maxOb1, minOb1, MIN_VAR, MAX_VAR);
+			this.variablesObserved1.set(i, aux1);
 		}
-		System.out.println(" ");
 		
 		for(int i = 0; i < this.variablesObserved2.size(); i++) {
-			this.normalize(this.variablesObserved2.get(i), MAX_VAR, MIN_VAR, minOb2, maxOb2);
+			double aux2 = this.normalize(this.variablesObserved2.get(i), maxOb2, minOb2, MIN_VAR, MAX_VAR);
+			this.variablesObserved2.set(i, aux2);
 		}
 		
 		//this.printHValues();
 		this.generateTuple();
 			
 		this.situationTuple.add(new SituationTuple ((index+1), this.variablesTuple, this.totalNoiseS1.get(index), this.totalNoiseS2.get(index)));
+		
+		//this.displayAllVariablesEvolution(index);
+		//this.displayDeviationEvolution(index);
 	}
 	
 	/**
@@ -393,8 +401,8 @@ public class RecovacGenerator extends Generator {
 			auxFloat = df.format(valueD);	
 			newValueD = Float.parseFloat(auxFloat);
 		}
-		catch (Exception e) {
-			 System.out.println("Exception: " + e);
+		catch (NumberFormatException e) {
+			 newValueD = 0;
 		}
 		
 		return newValueD;
@@ -417,6 +425,9 @@ public class RecovacGenerator extends Generator {
 		auxN1 = (value - min)/ (max - min);
 		auxN2 = auxN1 * (b-a);
 		valueN = auxN2 + a;
+
+		if ( Double.isNaN(valueN))
+			valueN = 0.0;
 		
 		return valueN;
 	}
@@ -480,6 +491,34 @@ public class RecovacGenerator extends Generator {
 	public void printActionStateVariables() {
 		for(String s : this.variablesActionState.keySet()) {
 			System.out.println(this.variablesActionState.get(s));
+		}
+	}
+	
+	public void displayAllVariablesEvolution(int _index) {
+		ILxPlotChart auxChart;
+		for(int i = 0; i < this.variablesTuple.size(); i++) {
+			auxChart = LxPlot.getChart(this.variablesTuple.get(i).getName());
+			auxChart.add("Predicted value", _index, this.variablesTuple.get(i).getValuePredicted());
+			auxChart.add("Observed value 1", _index, this.variablesTuple.get(i).getValueObserved1());
+			auxChart.add("Observed value 2", _index, this.variablesTuple.get(i).getValueObserved2());
+		}
+	}
+	
+	public void displayDeviationEvolution (int _index) {
+		ILxPlotChart auxChart;
+		for(int i = 0; i < this.variablesTuple.size(); i++) {
+			auxChart = LxPlot.getChart( this.variablesTuple.get(i).getName() + "deviation");
+			auxChart.add("Deviation 1", _index, this.variablesTuple.get(i).getDeviation1());
+			auxChart.add("Deviation 2", _index, this.variablesTuple.get(i).getDeviation2());
+		}
+	}
+	
+	public void displayDeviationWithThresholde (int index, float _thresholde, List<Float> totalNoise) {
+		ILxPlotChart auxChart;
+		for(int i = 1; i <= numberS; i++) {
+			auxChart = LxPlot.getChart( "Abnormality detection" + index);
+			auxChart.add("Thresholde ", i,_thresholde);
+			auxChart.add("Deviation by situation", i, totalNoise.get(i-1));
 		}
 	}
 }

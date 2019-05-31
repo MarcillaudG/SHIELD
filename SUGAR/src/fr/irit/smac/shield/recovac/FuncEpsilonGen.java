@@ -1,6 +1,7 @@
 package fr.irit.smac.shield.recovac;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -136,25 +137,11 @@ public class FuncEpsilonGen {
 		}
 	}
 	
-	public double getMinValueList(List<Double> variables, double max) {
-		double a = max;
-		
-		for (int i = 0; i < variables.size(); i++) {
-			if (variables.get(i) < a) {
-				a = variables.get(i);
-			}
-		}
-		
-		return a;
+	public double getMinValueList(List<Double> variables) {
+		return Collections.min(variables);
 	}
 	
 	public double getMaxValueList(List<Double> variables) {
-		double b = 0;
-		for (int i = 0; i < variables.size(); i++) {
-			if (variables.get(i) > 0) {
-				b = variables.get(i);
-			}
-		}
-		return b;
+		return Collections.max(variables);
 	}
 }
