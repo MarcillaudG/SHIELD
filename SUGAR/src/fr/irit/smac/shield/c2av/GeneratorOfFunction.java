@@ -25,6 +25,7 @@ public class GeneratorOfFunction {
 	
 	public GeneratorOfFunction() {
 		this.NB_VAR_MAX = 1000;
+		this.generator = new Generator();
 		init();
 		initVariable();
 		
@@ -32,13 +33,17 @@ public class GeneratorOfFunction {
 	
 	public GeneratorOfFunction(int nbVar) {
 		this.NB_VAR_MAX = nbVar;
+		this.generator = new Generator();
 		init();
 		initVariable();
 		
 	}
-	
+	public GeneratorOfFunction(Generator gen) {
+		this.generator = gen;
+		this.NB_VAR_MAX = gen.getNbVarMax();
+		init();
+	}
 	private void init() {
-		this.generator = new Generator();
 		this.functions = new TreeMap<String,SyntheticFunction>();
 		this.nbFunction = 0;
 		this.rand = new Random();
@@ -84,6 +89,23 @@ public class GeneratorOfFunction {
 
 	public double getWorstCaseValue(String var) {
 		return this.generator.getWorstCaseValue(var);
+		
+	}
+
+	public SyntheticFunction getSyntheticFunctionWithName(String name) {
+		return this.functions.get(name);
+	}
+
+	public void generateFunction(String name, int nbVarMax) {
+		Deque<String> variables = new ArrayDeque<String>();
+
+		List<String> variablesRemaining = new ArrayList<String>(this.generator.getAllVariables());
+		for(int i = 0; i < nbVarMax; i++) {
+			variables.push(variablesRemaining.remove(rand.nextInt(variablesRemaining.size())));
+		}
+		SyntheticFunction fun = new SyntheticFunction(name,this,variables);
+		this.functions.put(fun.getName(), fun);
+		this.nbFunction++;
 		
 	}
 

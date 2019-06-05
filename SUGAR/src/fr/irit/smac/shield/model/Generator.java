@@ -18,7 +18,7 @@ public class Generator {
 	 */
 	private Random rand;
 
-	public static int NB_MAX_VAR;
+	private int NB_MAX_VAR;
 
 	public static double MIN_VAR = 0.0;
 
@@ -175,6 +175,31 @@ public class Generator {
 		this.initVariableWithRange("Variable"+this.nbVar,min,max);
 		this.nbVar++;
 	}
+	
+	public void initSetOfVariableWithRange(int nbVarToBuild, double min,double max) {
+		for(int i = 0; i < nbVarToBuild; i++) {
+			this.variables.put("Variable"+this.nbVar, new Variable("Variable"+this.nbVar,min,max, this.rand.nextDouble()*(max - min)+min));
+			this.nbVar++;
+		}
+		this.generateAllFunctions();
+	}
+	
+	public void generateAllFunctions() {
+		for(Variable var : this.variables.values()) {
+			List<String> variablesRemaining = new ArrayList<String>(this.variables.keySet());
+			int nbVarToAdd = this.rand.nextInt(Math.min(NB_MAX_VAR, variablesRemaining.size())+1);
+			Deque<Variable> parameters = new ArrayDeque<Variable>();
+
+			for(int i = 0; i < nbVarToAdd && variablesRemaining.size()>0;i++) {
+				String param = variablesRemaining.get(this.rand.nextInt(variablesRemaining.size()));
+				parameters.push(this.variables.get(param));
+
+				variablesRemaining.remove(param);
+			}
+			var.setFun(FunctionGen.generateFunctionWithRange(parameters.size(), parameters,var.getMin(),var.getMax()));
+		}
+	}
+
 
 	/**
 	 * For all variables, generate the new value
@@ -224,5 +249,14 @@ public class Generator {
 		double vmin = Math.abs(v.getValue()-v.getMin());
 		
 		return vmax > vmin ? v.getMax() : v.getMin();
+	}
+	
+	public int getNbVarMax() {
+		return this.NB_MAX_VAR;
+	}
+	
+	public void putNewVariable(String name, Variable var) {
+		this.variables.put(name, var);
+		this.nbVar++;
 	}
 }
