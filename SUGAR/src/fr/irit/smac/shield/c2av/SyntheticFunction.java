@@ -32,6 +32,8 @@ public class SyntheticFunction {
 	private double lastValue;
 	
 	private int nbInput;
+	
+	private Set<Integer> inputIdRemoved;
 
 	public enum Operator{ADD,SUB,MULT};
 
@@ -257,9 +259,11 @@ public class SyntheticFunction {
 	}
 	
 	private void setOpRemovedInput(Set<Integer> opToRemove) {
+		this.inputIdRemoved = new TreeSet<Integer>();
 		for(Integer opRemoved : opToRemove) {
 			this.operandsRemoved.add(this.inputs.get(opRemoved).getOperand());
 			this.inputs.get(opRemoved).setOperand("UNKNOWN");
+			this.inputIdRemoved.add(opRemoved);
 		}
 	}
 
@@ -303,6 +307,10 @@ public class SyntheticFunction {
 
 	public String getInputName(int i) {
 		return this.inputs.get(i).getOperand();
+	}
+
+	public Set<Integer> getInputIDRemoved() {
+		return this.inputIdRemoved;
 	}
 
 }
