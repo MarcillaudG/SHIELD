@@ -148,13 +148,13 @@ public class SyntheticFunction {
 		return res;
 	}
 	
-	public double computeInput(Deque<Double> queue) {
+	public double computeInput() {
 		double res =0.0;
 		for(int i = 0; i < this.nbInput; i++) {
 			String operand = this.inputs.get(i).getOperand();
 			double value = 0.0;
 			if(operand.equals("UNKNOWN")) {
-				value = this.generator.getWorstCaseValue(operand);
+				value = this.generator.getWorstCaseValueInput(this.name,i);
 			}
 			else {
 				value = this.generator.getValueOfVariable(operand);
@@ -299,6 +299,10 @@ public class SyntheticFunction {
 	public String toStringRemoved() {
 
 		return "SyntheticFunction [name=" + name + ", removed=" + this.operandsRemoved + "]";
+	}
+
+	public String getInputName(int i) {
+		return this.inputs.get(i).getOperand();
 	}
 
 }

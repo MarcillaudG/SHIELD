@@ -14,12 +14,13 @@ public class TestFunction {
 		try {
 			SyntheticFunction fun2 = fun1.degradeFunctionInput(20);
 			gen.printAllFunctions();
-			System.out.println(fun2.toStringRemoved());
+			System.out.println(fun1.compute());
+			System.out.println(fun2.computeInput());
 		} catch (TooMuchVariableToRemoveException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+		
 
 
 		/*for(int i = 0; i < 50; i ++) {

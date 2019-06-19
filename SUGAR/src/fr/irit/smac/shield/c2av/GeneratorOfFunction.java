@@ -109,4 +109,9 @@ public class GeneratorOfFunction {
 		
 	}
 
+	public double getWorstCaseValueInput(String name, int i) {
+		String operand = this.getSyntheticFunctionWithName(name).getInputName(i);
+		return 0;
+	}
+
 }
