@@ -4,8 +4,10 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import fr.irit.smac.shield.exceptions.NotEnoughParametersException;
@@ -23,7 +25,13 @@ public class SyntheticFunction {
 	
 	private Set<String> operandsRemoved;
 
+	//private Deque<Input> inputs;
+	
+	private Map<Integer,Input> inputs;
+	
 	private double lastValue;
+	
+	private int nbInput;
 
 	public enum Operator{ADD,SUB,MULT};
 
@@ -31,6 +39,7 @@ public class SyntheticFunction {
 		this.name = name;
 		this.generator = gen;
 		this.operandsRemoved = new TreeSet<String>();
+		//this.inputs = new ArrayDeque<Input>();
 
 		init();
 	}
@@ -41,6 +50,7 @@ public class SyntheticFunction {
 		this.generator = gen;
 		this.operandsRemoved = new TreeSet<String>();
 		initOperators();
+		initInputs();
 	}
 
 
@@ -50,6 +60,7 @@ public class SyntheticFunction {
 		this.operators = operators;
 		this.generator = gen;
 		this.operandsRemoved = new TreeSet<String>();
+		initInputs();
 	}
 
 
@@ -58,8 +69,27 @@ public class SyntheticFunction {
 		this.operators = new ArrayDeque<Operator>();
 
 		this.lastValue = 0.0;
+		initInputs();
 	}
 
+	/**
+	 * Init les input
+	 */
+	private void initInputs() {
+		this.nbInput = 0;
+		this.inputs = new TreeMap<Integer,Input>();
+		Deque<String> operandsTmp = new ArrayDeque<String>(this.operands);
+		Deque<Operator> operatorsTmp = new ArrayDeque<Operator>(this.operators);
+		Input first = new Input(Operator.ADD,operandsTmp.poll());
+		this.inputs.put(this.nbInput,first);
+		this.nbInput++;
+		while(!operandsTmp.isEmpty()) {
+			Input input = new Input(operatorsTmp.poll(),operandsTmp.poll());
+			this.inputs.put(this.nbInput,input);
+			this.nbInput++;
+		}
+		
+	}
 
 	private void initOperators() {
 		this.operators = new ArrayDeque<Operator>();
@@ -86,8 +116,6 @@ public class SyntheticFunction {
 	}
 	/**
 	 * Return the value of the function
-	 * @param xi
-	 * 			the queue of the values of the variables
 	 * @return the value of the function
 	 * 
 	 */
@@ -103,6 +131,35 @@ public class SyntheticFunction {
 				value = this.generator.getWorstCaseValue(var);
 			}
 			res = operate(res,value,tmp.poll());
+		}
+		this.lastValue = res;
+		return res;
+	}
+	
+	public double compute(Deque<Double> queue) {
+		double res =0.0;
+		Deque<Double> xi = new ArrayDeque<Double>(queue);
+		Deque<Operator> tmp = new ArrayDeque<Operator>(operators);
+		while(!xi.isEmpty()) {
+			double value =xi.poll();
+			res = operate(res,value,tmp.poll());
+		}
+		this.lastValue = res;
+		return res;
+	}
+	
+	public double computeInput(Deque<Double> queue) {
+		double res =0.0;
+		for(int i = 0; i < this.nbInput; i++) {
+			String operand = this.inputs.get(i).getOperand();
+			double value = 0.0;
+			if(operand.equals("UNKNOWN")) {
+				value = this.generator.getWorstCaseValue(operand);
+			}
+			else {
+				value = this.generator.getValueOfVariable(operand);
+			}
+			res = operate(res,value,this.inputs.get(i).getOperator());
 		}
 		this.lastValue = res;
 		return res;
@@ -158,10 +215,52 @@ public class SyntheticFunction {
 		degraded.setOpRemoved(opToRemove);
 		return degraded;
 	}
+	
+	/**
+	 * Function used to degrade a function
+	 * 
+	 * Construct a new function with some of the variables
+	 * and parameters remove
+	 * 
+	 * @param function
+	 * 			the function to degrade
+	 * @param nbToRemove
+	 * 			the number of variables to remove
+	 * @return the degraded function
+	 * 
+	 * @throws TooMuchVariableToRemoveException
+	 * 			when nbToRemove is higher than the number of variables
+	 * 			of the function
+	 */
+	public SyntheticFunction degradeFunctionInput(int nbToRemove) throws TooMuchVariableToRemoveException {
+		Random rand = new Random();
+		if(nbToRemove > this.operands.size()) {
+			throw new TooMuchVariableToRemoveException("Error in degradeFunction : "+nbToRemove+ " asked to remove but only "+this.operands.size() + " are availables");
+		}
+		// Collections used to remove randomly 
+		List<Integer> inputToRemove = new ArrayList<Integer>(inputs.keySet());
+		Set<Integer> opToRemove = new TreeSet<Integer>();
+
+		for(int i = 0 ; i < nbToRemove; i++) {
+			int toRemove = rand.nextInt(inputToRemove.size());
+			int removed = inputToRemove.remove(toRemove);
+			String operand = new String(this.inputs.get(removed).getOperand());
+			opToRemove.add(removed);
+		}
+		SyntheticFunction degraded = new SyntheticFunction(this.name,this.generator, new ArrayDeque<String>(this.operands), new ArrayDeque<Operator>(this.operators));
+		degraded.setOpRemovedInput(opToRemove);
+		return degraded;
+	}
 
 	private void setOpRemoved(Set<String> opToRemove) {
 		this.operandsRemoved = opToRemove;
-		
+	}
+	
+	private void setOpRemovedInput(Set<Integer> opToRemove) {
+		for(Integer opRemoved : opToRemove) {
+			this.operandsRemoved.add(this.inputs.get(opRemoved).getOperand());
+			this.inputs.get(opRemoved).setOperand("UNKNOWN");
+		}
 	}
 
 	/**
@@ -187,11 +286,19 @@ public class SyntheticFunction {
 		return this.operands;
 	}
 
+
 	@Override
 	public String toString() {
-		return "SyntheticFunction [name=" + name + ", operators=" + operators + ", operands=" + operands
-				+ ", lastValue=" + lastValue + "]";
+		return "SyntheticFunction [name=" + name + ", inputs=" + inputs + "]";
 	}
 
+	public int getNbRemoved() {
+		return this.operandsRemoved.size();
+	}
+
+	public String toStringRemoved() {
+
+		return "SyntheticFunction [name=" + name + ", removed=" + this.operandsRemoved + "]";
+	}
 
 }

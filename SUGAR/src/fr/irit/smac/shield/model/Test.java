@@ -11,12 +11,19 @@ public class Test {
 		/*for(int i = 0 ; i < 100; i++) {
 			gen.initVariableWithRange(-100,100);
 		}*/
-		gen.initSetOfVariableWithRange(1000, 0, 100);
+		gen.initSetOfVariableWithRange(10, 0, 100);
 		gen.generateAllValues();
-		System.out.println(gen.getValueOfVariable("Variable1000"));
-		gen.printAllVariables();
+
+		String name = "[";
+		for(String s :gen.getAllVariables()) {
+			name += s+",";
+		}
+		name = name.substring(0, name.length()-1);
+		name += "]";
+		System.out.println(name);
+		/*gen.printAllVariables();
 		gen.generateAllValues();
-		gen.printAllVariables();
+		gen.printAllVariables();*/
 	}
 
 }
