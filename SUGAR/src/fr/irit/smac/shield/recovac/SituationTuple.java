@@ -8,73 +8,59 @@ import fr.irit.smac.shield.recovac.VariableTuple;
 public class SituationTuple {
 	private int idSituation;
 	private List<VariableTuple> variables = new ArrayList<VariableTuple>();
-	private boolean capacity1; //true = capable , false = incapable
-	private boolean capacity2; //true = capable , false = incapable
-	private float noiseAdded1;
-	private float noiseAdded2;
+	private boolean capacity; //true = capable , false = incapable
+	private float noiseAdded;
 	
-	public SituationTuple(int _idSituation, List<VariableTuple> _variablesTuple, boolean _capacity) {
-		this.idSituation = _idSituation;
-		this.variables = _variablesTuple;
-		this.capacity1 = _capacity;
-		this.capacity2 = _capacity;
+	public SituationTuple(int idSituation, List<VariableTuple> variablesTuple, boolean capacity) {
+		this.idSituation = idSituation;
+		this.variables = variablesTuple;
+		this.capacity = capacity;
 	}
 	
-	public SituationTuple(int _idSituation, List<VariableTuple> _variablesTuple, float _noise1, float _noise2) {
-		this.idSituation = _idSituation;
-		this.variables = _variablesTuple;
-		this.noiseAdded1 = _noise1;
-		this.noiseAdded2 = _noise2;
+	public SituationTuple(int idSituation, List<VariableTuple> variablesTuple, float noise) {
+		this.idSituation = idSituation;
+		this.variables = variablesTuple;
+		this.noiseAdded = noise;
 	}
 
 	public int getIdSituation() {
 		return idSituation;
 	}
 	
-	public void setIdSituation(int _idSituation) {
-		this.idSituation = _idSituation;
+	public void setIdSituation(int idSituation) {
+		this.idSituation = idSituation;
 	}
 	
 	public List<VariableTuple> getVariables() {
 		return variables;
 	}
 	
-	public void setVariables(List<VariableTuple> _variables) {
-		this.variables = _variables;
+	public void setVariables(List<VariableTuple> variables) {
+		this.variables = variables;
 	}
 
-	public boolean getCapacity1() {
-		return capacity1;
+	public boolean getCapacity() {
+		return capacity;
 	}
 	
-	public void setCapacity1(boolean _capacity) {
-		this.capacity1 = _capacity;
+	public void setCapacity(boolean capacity) {
+		this.capacity = capacity;
 	}
-	public boolean getCapacity2() {
-		return capacity2;
-	}
-	
-	public void setCapacity2(boolean _capacity) {
-		this.capacity2 = _capacity;
-	}
-	public double getNoiseAdded1() {
-		return this.noiseAdded1;
+
+	public double getNoiseAdded() {
+		return this.noiseAdded;
 	}
 	
-	public void setNoiseAdded1(float _noiseAdded) {
-		this.noiseAdded1 = _noiseAdded;
-	}
-	
-	public float getNoiseAdded2() {
-		return this.noiseAdded2;
-	}
-	
-	public void setNoiseAdded2(float _noiseAdded) {
-		this.noiseAdded2 = _noiseAdded;
+	public void setNoiseAdded(float noiseAdded) {
+		this.noiseAdded = noiseAdded;
 	}
 	
 	@Override
 	public String toString() {
-		return "Situation " + idSituation + ": \n" + variables + "\n noiseAdded1=" + noiseAdded1 + "\n noiseAdded2=" + noiseAdded2 + "\n capacity1=" + capacity1 + "\n capacity2=" + capacity2 + "\n";
+		return "Situation " + idSituation + ": \n" + variables + "\n noiseAdded=" + noiseAdded + "\n capacity=" + capacity + "\n";
+	}
+	
+	public String print(List<VariableTuple> actions) {
+		return "Situation " + idSituation + ": \n" + variables + "\n" + actions + "\n noiseAdded=" + noiseAdded + "\n capacity=" + capacity + "\n";
 	}
 }

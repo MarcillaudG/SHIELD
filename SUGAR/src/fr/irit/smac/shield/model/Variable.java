@@ -5,38 +5,36 @@ import java.util.Random;
 
 	
 public class Variable {
-	private String name;
-	
+
+	private VariableState variableState;
 	private double min;
-	
 	private double max;
-	
-	private double value;
-	
 	private FunctionGen fun;
 	
 
 
 	public Variable(String name, double min, double max, double value) {
-		this.name = name;
+		this.variableState = new VariableState(name, value);
 		this.min = min;
 		this.max = max;
-		this.value = value;
 	}
 
 	public Variable(String name, double min, double max) {
-		this.name = name;
 		this.min = min;
 		this.max = max;
-		this.value = this.generateValue();
+		this.variableState = new VariableState(name, this.generateValue());
 	}
-
+	
+	public Variable(String name, double value) {
+		this.variableState = new VariableState(name, value);
+	}
+	
 	public String getName() {
-		return name;
+		return variableState.getName();
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		this.variableState.setName(name);
 	}
 
 	public double getMin() {
@@ -56,11 +54,11 @@ public class Variable {
 	}
 
 	public double getValue() {
-		return value;
+		return variableState.getValue();
 	}
 
 	public void setValue(double value) {
-		this.value = value;
+		this.variableState.setValue(value);
 	}
 
 	public FunctionGen getFun() {
@@ -72,16 +70,17 @@ public class Variable {
 	}
 
 	public double generateValue () {
-		return this.value = min + new Random().nextDouble()*(max-min);
+		return min + new Random().nextDouble()*(max-min);
 	}
+	
+	/*@Override
+	public String toString() {
+		return "Variable [name=" + name + ", min=" + min + ", max=" + max + ", value=" + value+"]";
+	}*/
 	
 	@Override
 	public String toString() {
-		return "Variable [name=" + name + ", min=" + min + ", max=" + max + ", value=" + value+"]";
+		return variableState.toString();
 	}
-	
-	
-	
-	
-	
+		
 }

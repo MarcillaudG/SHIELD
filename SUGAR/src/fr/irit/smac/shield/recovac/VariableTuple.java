@@ -7,10 +7,8 @@ public class VariableTuple {
 	private FunctionGen fun;
 	private float value;
 	private float valuePredicted;
-	private float valueObserved1;
-	private float valueObserved2;
-	private float deviation1;
-	private float deviation2;
+	private float valueObserved;
+	private float deviation;
 	private String type;
 	
 	public VariableTuple(String _name, FunctionGen _fun, float _value) {
@@ -50,36 +48,20 @@ public class VariableTuple {
 		this.valuePredicted = _valuePredicted;
 	}
 	
-	public float getValueObserved1() {
-		return valueObserved1;
+	public float getValueObserved() {
+		return valueObserved;
 	}
 	
-	public void setValueObserved1(float _valueObserved) {
-		this.valueObserved1 = _valueObserved;
+	public void setValueObserved(float _valueObserved) {
+		this.valueObserved = _valueObserved;
 	}
 	
-	public float getValueObserved2() {
-		return valueObserved2;
+	public float getDeviation() {
+		return deviation;
 	}
 	
-	public void setValueObserved2(float _valueObserved) {
-		this.valueObserved2 = _valueObserved;
-	}
-	
-	public float getDeviation1() {
-		return deviation1;
-	}
-	
-	public void setDeviation1(float _deviation) {
-		this.deviation1 = _deviation;
-	}
-	
-	public float getDeviation2() {
-		return deviation2;
-	}
-	
-	public void setDeviation2(float _deviation) {
-		this.deviation2 = _deviation;
+	public void setDeviation(float _deviation) {
+		this.deviation = _deviation;
 	}
 	
 	public String getType() {
@@ -92,12 +74,10 @@ public class VariableTuple {
 	
 	@Override
 	public String toString() {
-		return variableName + "[value=" + value + ", predictedValue=" + valuePredicted + ", observedValueEp1=" + valueObserved1 + ", deviation1=" + deviation1 + ", observedValueEp2=" + valueObserved2 + ", deviation2=" + deviation2 +"] \n";
-		//return variableName + " [predictedValue= " + valuePredicted + ", observedValueEp1= " + valueObserved1 + ", deviation1= " + deviation1 + ", observedValueEp2= " + valueObserved2 + ", deviation2= " + deviation2 +"] \n";
-
+		return variableName + "[value=" + value + ", predictedValue=" + valuePredicted + ", observedValueEp=" + valueObserved + ", deviation=" + deviation +"] \n";
 	}
 	
 	public String printComplet() {
-		return variableName + "[value=" + value + ", predictedValue=" + valuePredicted + ", observedValue=" + valueObserved1 + ", function: h=" + fun.getOperators()+ ", nbVarInfluen=" + fun.getVariables().size() +"]";
+		return variableName + "[value=" + value + ", predictedValue=" + valuePredicted + ", observedValue=" + valueObserved + ", function: h=" + fun.getOperators()+ ", nbVarInfluen=" + fun.getVariables().size() +"]";
 	}
 }
