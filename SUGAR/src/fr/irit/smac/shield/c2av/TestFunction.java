@@ -8,6 +8,8 @@ public class TestFunction {
 	public static void main(String args[]) {
 		GeneratorOfTypedVariable genTyped = new GeneratorOfTypedVariable();
 		genTyped.initSetOfTypedVariable(150, 0, 100, "Type 1");
+		genTyped.generateAllFunctions();
+		genTyped.generateAllValues();
 		GeneratorOfFunction gen = new GeneratorOfFunction(genTyped);
 		gen.generateFunction("Function1",100);
 		SyntheticFunction fun1 =  gen.getSyntheticFunctionWithName("Function1");
