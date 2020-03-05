@@ -4,28 +4,28 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class SubFunction {
+public abstract class SubFunction<type extends Number> {
 
 	public enum MathForm{SQRT,POW,LOG,INV};
-	
+
 	private MathForm myForm;
-	
+
 	private String name;
-	
-	private ComposedFunction masterFunction;
-	
+
+	protected ComposedFunction masterFunction;
+
 	private List<Input<?>> inputs;
-	
-	private Input<?> myOutput;
-	
+
+	protected Input<type> myOutput;
+
 	private boolean satisfied;
-	
+
 	private int nbInput;
-	
+
 	private int transform;
-	
+
 	private int crit;
-	
+
 	public SubFunction(String name, ComposedFunction cf, int nbInput, int transform) {
 		this.name = name;
 		this.masterFunction = cf;
@@ -34,25 +34,19 @@ public class SubFunction {
 		this.inputs = new ArrayList<>();
 		this.crit = 0;
 		this.nbInput = nbInput;
-		
+
 		Random rand = new Random();
-		
-		if(rand.nextInt(2)%2==0) {
-			this.myOutput = new InputFloat(0.0f,this.masterFunction,this.name+ "Output",this.transform);
-		}
-		else {
-			this.myOutput = new InputInt(0,this.masterFunction,this.name+ "Output",this.transform);
-		}
-		
+
+
+
 		this.myForm = MathForm.values()[rand.nextInt(MathForm.values().length)];
-		
-		this.masterFunction.newInput(this.myOutput);
+
 	}
-	
+
 	public boolean isSatisfied() {
 		return this.nbInput == this.inputs.size();
 	}
-	
+
 	public boolean bindInput(Input<?> in) {
 		if(this.isSatisfied()) {
 			return false;
@@ -127,9 +121,9 @@ public class SubFunction {
 
 	public void addInput() {
 		this.nbInput++;
-		
+
 	}
-	
+
 	public String toString() {
 		String res = this.name +": "+this.myForm.toString()+"(";
 		for(Input<?> in:this.inputs) {
@@ -138,7 +132,49 @@ public class SubFunction {
 		res+=")";
 		return res;
 	}
+
+	public abstract void compute() ;
 	
+	/*public type applyFormula(type res) {
+		switch(this.myForm) {
+		case INV:
+			return 1/res;
+		case LOG:
+			return (float) Math.log(res);
+		case POW:
+			return res*res;
+		case SQRT:
+			return (float) Math.sqrt(res);
+		default:
+			break;
+
+		}
+		return res;
+	}*/
 	
+	public abstract type applyFormule(type value);
+
+	public abstract SubFunction<type> createSubFunction(String name, int nbInput);
+	
+	/*public SubFunction<type> createSubFunction(String name, int nbInput){
+		return new SubFunction<type>(name,this.masterFunction, nbInput, this.transform-1);
+	}
+*/
+	
+	public void SetValueOfMyOutput(type value) {
+		this.myOutput.setValue(value);
+	}
+
+	public List<Input<?>> allInput(){
+		return this.inputs;
+	}
+	
+	public MathForm getFormula() {
+		return this.myForm;
+	}
+
+	public ComposedFunction getMasterFunction() {
+		return masterFunction;
+	}
 	
 }

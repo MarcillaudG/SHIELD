@@ -1,6 +1,6 @@
 package fr.irit.smac.complex;
 
-public abstract class Output<type> {
+public abstract class Output<type extends Number> {
 
 	private type value;
 	
@@ -10,10 +10,13 @@ public abstract class Output<type> {
 	
 	private Input<type> binded;
 	
-	public Output(type value, int transform, String name) {
+	private ComposedFunction cf;
+	
+	public Output(type value, int transform, String name,ComposedFunction cf) {
 		this.value = value;
 		this.transform = transform;
 		this.name = name;
+		this.cf = cf;
 	}
 
 	public abstract type compute();
@@ -66,6 +69,20 @@ public abstract class Output<type> {
 	public String toString() {
 		return "Output [name=" + name + ", binded=" + binded + "]";
 	}
+
+	public void perceiveValue() {
+		this.value = this.binded.getValue();
+		
+	}
 	
+	public abstract SubFunction<type> createSubFunction(String name, int nbInput);
+
+	public ComposedFunction getCf() {
+		return cf;
+	}
+	
+	/*public SubFunction<type> createSubFunction(String name, int nbInput){
+		return new SubFunction<type>(name, this.cf, nbInput, this.transform);
+	}*/
 	
 }

@@ -2,8 +2,8 @@ package fr.irit.smac.complex;
 
 public class OutputInt extends Output<Integer> {
 
-	public OutputInt(Integer value, int transform, String name) {
-		super(value, transform, name);
+	public OutputInt(Integer value, int transform, String name,ComposedFunction cf) {
+		super(value, transform, name,cf);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -12,4 +12,10 @@ public class OutputInt extends Output<Integer> {
 		return this.getValue();
 	}
 
+
+	@Override
+	public SubFunction<Integer> createSubFunction(String name, int nbInput) {
+		return new SubFunctionInt(name, this.getCf(), nbInput, this.getTransform());
+		
+	}
 }

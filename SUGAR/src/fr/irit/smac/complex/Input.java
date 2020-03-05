@@ -3,16 +3,16 @@ package fr.irit.smac.complex;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Input<type> {
+public abstract class Input<T extends Number> {
 
 	private String name;
 
-	private type value;
+	protected T value;
 
 	private int crit;
 
 	private ComposedFunction cf;
-	private Set<SubFunction> binded;
+	private Set<SubFunction<T>> binded;
 	private Set<SubFunction> sbns;
 	private Set<Output> outputs;
 
@@ -22,8 +22,7 @@ public class Input<type> {
 
 	private int transform;
 
-	public Input(type value, ComposedFunction cf, String name, int transform) {
-		this.value = value;
+	public Input(ComposedFunction cf, String name, int transform) {
 		crit = 0;
 		this.cf = cf;
 		this.binded = new HashSet<>();
@@ -34,13 +33,11 @@ public class Input<type> {
 		this.transform = transform;
 	}
 
-	public type getValue() {
+	public T getValue() {
 		return this.value;
 	}
 
-	public void setValue(type value) {
-		this.value = value;
-	}
+	public abstract void setValue(T value);
 
 	public void start() {
 
@@ -58,16 +55,18 @@ public class Input<type> {
 
 	public void perceiveFunction() {
 		this.sbns.clear();
-		this.sbns.addAll(this.cf.getSubFunctionNonSatisfied(this.transform,this.binded));
+		//this.sbns.addAll(this.cf.getSubFunctionNonSatisfied(this.transform,this.binded));
+		this.sbns.addAll(this.perceiveSubNonSatisfied(this.transform, this.binded));
 		this.sbns.removeAll(this.binded);
 
 		this.others.clear();
-		this.others.addAll(this.cf.getOtherInput(this.name,this.transform));
+		this.others.addAll(this.cf.getOtherInput(this.name,this.transform,this.getClass()));
 
 		this.outputs.clear();
 		this.outputs.addAll(this.cf.getOutputs(this.transform));
 
 	}
+	protected abstract Set<SubFunction<T>> perceiveSubNonSatisfied(int transf, Set<SubFunction<T>> bind);
 
 	public void decideAndActFunction() {
 		this.crit = this.binded.size();
@@ -169,6 +168,10 @@ public class Input<type> {
 		this.transform = transform;
 	}
 
+	public ComposedFunction getCf() {
+		return cf;
+	}
+
 	@Override
 	public String toString() {
 		return "Input [name=" + name + "]";
@@ -182,5 +185,5 @@ public class Input<type> {
 	}
 
 
-
+	
 }
