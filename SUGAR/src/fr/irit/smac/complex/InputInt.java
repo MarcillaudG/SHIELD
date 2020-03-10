@@ -18,5 +18,11 @@ public class InputInt extends Input<Integer> {
 		this.value = value;
 		
 	}
+	
+
+	@Override
+	public String toString() {
+		return "InputInt: "+this.getName()+" : "+this.value;
+	}
 
 }

@@ -24,6 +24,8 @@ public class ComposedFunction {
 	private List<Input<?>> allInputs;
 
 	private List<Output<?>> allOutputs;
+	
+	private List<Input<?>> initInput;
 
 	private Generator gen;
 
@@ -51,6 +53,7 @@ public class ComposedFunction {
 		this.missingFunction = new int[complexity];
 		this.seuilCrit = 5;
 		init();
+		this.initInput = new ArrayList<>();
 	}
 
 
@@ -69,6 +72,7 @@ public class ComposedFunction {
 		while(!this.isSatisfied()) {
 			this.cycleBinding();
 		}
+		this.initInput = new ArrayList<>();
 	}
 
 
@@ -83,6 +87,7 @@ public class ComposedFunction {
 		this.seuilCrit = 5;
 
 
+		this.initInput = new ArrayList<>();
 		initList(input, outputs);
 		//init2output();
 
@@ -104,11 +109,13 @@ public class ComposedFunction {
 				Input<?> in = new InputFloat(this, "InputInit"+i,0);
 				this.inputs[i] = in;
 				this.allInputs.add(in);
+				this.initInput.add(in);
 			}
 			else {
 				Input<?> in = new InputInt(this, "InputInit"+i,0);
 				this.inputs[i] = in;
 				this.allInputs.add(in);
+				this.initInput.add(in);
 			}
 		}
 
@@ -425,6 +432,13 @@ public class ComposedFunction {
 
 
 	public void compute() {
+		System.out.println(this.initInput);
+		for(int i = 0; i < this.getinitInput().size();i++) {
+			if(this.getinitInput().get(i).value == null) {
+				System.out.println("ERROR: the input:"+this.getinitInput().get(i).getName()+" n'a pas de valeur" );
+			}
+		}
+		
 		List<SubFunction> tmplist = new ArrayList<SubFunction>(this.subFunctions);
 		int level = 1;
 		while(!tmplist.isEmpty()) {
@@ -454,21 +468,25 @@ public class ComposedFunction {
 		return res;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void setInitInput(int i, Float value) {
-		if(this.getinitInput().get(i) instanceof InputFloat) {
-			this.getinitInput().get(i).setValue(value);
+		System.out.println(this.initInput);
+		if(this.initInput.get(i) instanceof InputFloat) {
+			((InputFloat)this.initInput.get(i)).setValue(value);
 		}
 		else {
-			this.getinitInput().get(i).setValue(Math.round(value));
+			((InputInt)this.initInput.get(i)).setValue(Math.round(value));
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void setInitInput(int i, Integer value) {
-		if(this.getinitInput().get(i) instanceof InputFloat) {
-			this.getinitInput().get(i).setValue((float)value);
+		System.out.println(this.initInput);
+		if(this.initInput.get(i) instanceof InputFloat) {
+			((InputFloat)this.initInput.get(i)).setValue((float)value);
 		}
 		else {
-			this.getinitInput().get(i).setValue(value);
+			((InputInt)this.initInput.get(i)).setValue(value);
 		}
 	}
 
@@ -486,6 +504,7 @@ public class ComposedFunction {
 	 * @param binded
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public Set<SubFunction<Float>> getSubFunctionNonSatisfiedFloat(int transform, Set<SubFunction<Float>> binded) {
 		Set<SubFunction<Float>> res = new HashSet<SubFunction<Float>>();
 		for(int i =0; i < this.subFunctions.size();i++) {
@@ -502,6 +521,7 @@ public class ComposedFunction {
 	 * @param binded
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public Set<SubFunction<Integer>> getSubFunctionNonSatisfiedInt(int transform, Set<SubFunction<Integer>> binded) {
 		Set<SubFunction<Integer>> res = new HashSet<SubFunction<Integer>>();
 		for(int i =0; i < this.subFunctions.size();i++) {
@@ -517,7 +537,7 @@ public class ComposedFunction {
 
 	public static void main(String args[]) {
 		ComposedFunction cf = new ComposedFunction("CF1", 13, 2, 3, 3);
-
+		System.out.println(cf.getinitInput());
 		for(Input in: cf.getinitInput()) {
 			if(in instanceof InputFloat) {
 				in.setValue(10.0f);
@@ -530,10 +550,18 @@ public class ComposedFunction {
 
 		System.out.println(cf.getOutput(0).getValue());
 		System.out.println(cf.getOutput(1).getValue());
+		
+
+		System.out.println(cf.getinitInput());
 	}
 
 
 	public String getName() {
 		return this.name;
+	}
+
+
+	public int getNbInitInput() {
+		return this.getinitInput().size();
 	}
 }

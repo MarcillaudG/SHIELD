@@ -18,5 +18,10 @@ public class InputFloat extends Input<Float> {
 		this.value = value;
 		
 	}
+	
+	@Override
+	public String toString() {
+		return "InputFloat: "+this.getName()+" : "+this.value;
+	}
 
 }
