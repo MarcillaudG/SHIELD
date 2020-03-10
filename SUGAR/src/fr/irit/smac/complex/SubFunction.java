@@ -6,10 +6,6 @@ import java.util.Random;
 
 public abstract class SubFunction<type extends Number> {
 
-	public enum MathForm{SQRT,INV};
-
-	private MathForm myForm;
-
 	private String name;
 
 	protected ComposedFunction masterFunction;
@@ -25,6 +21,8 @@ public abstract class SubFunction<type extends Number> {
 	private int transform;
 
 	private int crit;
+	
+	protected float factor;
 
 	public SubFunction(String name, ComposedFunction cf, int nbInput, int transform) {
 		this.name = name;
@@ -37,11 +35,12 @@ public abstract class SubFunction<type extends Number> {
 
 		Random rand = new Random();
 
+		this.factor = rand.nextFloat() *4.0f-2.0f;
 
 
-		this.myForm = MathForm.values()[rand.nextInt(MathForm.values().length)];
 
 	}
+	
 
 	public boolean isSatisfied() {
 		return this.nbInput == this.inputs.size();
@@ -125,7 +124,7 @@ public abstract class SubFunction<type extends Number> {
 	}
 
 	public String toString() {
-		String res = this.name +": "+this.myForm.toString()+"(";
+		String res = this.name +": "+this.factor+"(";
 		for(Input<?> in:this.inputs) {
 			res+= in.getName()+"+";
 		}
@@ -168,10 +167,7 @@ public abstract class SubFunction<type extends Number> {
 	public List<Input<?>> allInput(){
 		return this.inputs;
 	}
-	
-	public MathForm getFormula() {
-		return this.myForm;
-	}
+
 
 	public ComposedFunction getMasterFunction() {
 		return masterFunction;

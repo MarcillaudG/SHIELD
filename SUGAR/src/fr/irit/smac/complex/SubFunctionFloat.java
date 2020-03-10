@@ -21,16 +21,7 @@ public class SubFunctionFloat extends SubFunction<Float> {
 
 	@Override
 	public Float applyFormule(Float res) {
-		switch(this.getFormula()) {
-		case INV:
-			return 1/res;
-		case SQRT:
-			return (float) Math.sqrt(res);
-		default:
-			break;
-
-		}
-		return res;
+		return res * this.factor;
 	}
 
 	@Override

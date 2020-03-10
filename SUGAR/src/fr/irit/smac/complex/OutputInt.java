@@ -9,6 +9,7 @@ public class OutputInt extends Output<Integer> {
 
 	@Override
 	public Integer compute() {
+		this.setValue(this.binded.getValue()%this.getMax()+this.getMin());
 		return this.getValue();
 	}
 

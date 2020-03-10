@@ -8,6 +8,7 @@ public class OutputFloat extends Output<Float> {
 
 	@Override
 	public Float compute() {
+		this.setValue((this.binded.getValue()%this.getMax()+this.getMin())%this.getMax());
 		return this.getValue();
 	}
 
@@ -19,7 +20,7 @@ public class OutputFloat extends Output<Float> {
 	
 	@Override
 	public void perceiveValue() {
-		this.setValue(this.binded.getValue()%this.getMax()+this.getMin());
+		this.setValue((this.binded.getValue()%this.getMax()+this.getMin())%this.getMax());
 	}
 
 }

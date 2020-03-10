@@ -28,17 +28,9 @@ public class SubFunctionInt extends SubFunction<Integer>{
 
 	@Override
 	public Integer applyFormule(Integer res) {
-		switch(this.getFormula()) {
-		case INV:
-			return 1/res;
-		case SQRT:
-			return (int) Math.sqrt(res);
-		default:
-			break;
-
-		}
-		return res;
+		return (int) (res * this.factor);
 	}
+
 
 
 	@Override

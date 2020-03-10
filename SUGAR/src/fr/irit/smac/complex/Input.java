@@ -9,18 +9,18 @@ public abstract class Input<T extends Number> {
 
 	protected T value;
 
-	private int crit;
+	protected int crit;
 
-	private ComposedFunction cf;
-	private Set<SubFunction<T>> binded;
-	private Set<SubFunction> sbns;
-	private Set<Output> outputs;
+	protected ComposedFunction cf;
+	protected Set<SubFunction<T>> binded;
+	protected Set<SubFunction> sbns;
+	protected Set<Output> outputs;
 
-	private Set<Input> others;
+	protected Set<Input> others;
 
-	private Output out;
+	protected Output out;
 
-	private int transform;
+	protected int transform;
 
 	public Input(ComposedFunction cf, String name, int transform) {
 		crit = 0;
@@ -68,58 +68,9 @@ public abstract class Input<T extends Number> {
 	}
 	protected abstract Set<SubFunction<T>> perceiveSubNonSatisfied(int transf, Set<SubFunction<T>> bind);
 
-	public void decideAndActFunction() {
-		this.crit = this.binded.size();
-		if(this.out == null) {
-
-			SubFunction target = null;
-			if(this.crit == 0) {
-				if(this.transform == this.cf.getComplexity()) {
-					for(Output out: this.outputs) {
-						if(!out.satisfied() && this.out == null) {
-							out.bind(this);
-							this.out = out;
-						}
-					}
-				}
-				else {
-					for(SubFunction sub : this.sbns) {
-						if((target == null || target.getCrit() < sub.getCrit()) && !this.binded.contains(sub)) {
-							target = sub;
-						}
-					}
-					//TODO
-					//Creation de function quand pas trouve
-					if(target == null) {
-						this.cf.MissingFunction(this.transform);
-					}
-				}
-			}
-			else {
-				boolean mostCrit = true;
-				for(Input<?> in : this.others) {
-					if(in.getCrit() <this.crit && !in.binded.containsAll(this.sbns)) {
-						mostCrit = false;
-					}
-				}
-				if(mostCrit) {
-					for(SubFunction sub : this.sbns) {
-						if((target == null || target.getCrit() < sub.getCrit()) && !this.binded.contains(sub)) {
-							target = sub;
-						}
-					}
-				}
-			}
-
-			// act
-			if(target != null) {
-				if(target.bindInput(this)) {
-					this.binded.add(target);
-					this.crit++;
-				}
-			}
-		}
-	}
+	public abstract void decideAndActFunction();
+	
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
