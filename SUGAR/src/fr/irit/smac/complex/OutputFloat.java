@@ -16,5 +16,10 @@ public class OutputFloat extends Output<Float> {
 		return new SubFunctionFloat(name, this.getCf(), nbInput, this.getTransform());
 		
 	}
+	
+	@Override
+	public void perceiveValue() {
+		this.setValue(this.binded.getValue()%this.getMax()+this.getMin());
+	}
 
 }

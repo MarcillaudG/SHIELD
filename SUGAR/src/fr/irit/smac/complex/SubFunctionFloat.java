@@ -24,10 +24,6 @@ public class SubFunctionFloat extends SubFunction<Float> {
 		switch(this.getFormula()) {
 		case INV:
 			return 1/res;
-		case LOG:
-			return (float) Math.log(res);
-		case POW:
-			return res*res;
 		case SQRT:
 			return (float) Math.sqrt(res);
 		default:

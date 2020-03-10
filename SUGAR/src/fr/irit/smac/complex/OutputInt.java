@@ -18,4 +18,10 @@ public class OutputInt extends Output<Integer> {
 		return new SubFunctionInt(name, this.getCf(), nbInput, this.getTransform());
 		
 	}
+	
+
+	@Override
+	public void perceiveValue() {
+		this.setValue(this.binded.getValue()%this.getMax()+this.getMin());
+	}
 }

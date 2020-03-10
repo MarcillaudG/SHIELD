@@ -216,9 +216,6 @@ public class ComposedFunction {
 				k++;
 			}
 		}
-		System.out.println("INIT");
-		System.out.println(this);
-		System.out.println("ENDS");
 	}
 
 
@@ -234,7 +231,6 @@ public class ComposedFunction {
 
 
 	public void cycleBinding() {
-		System.out.println("CYCLE: "+this.nbCycle);
 		for(int i = 0; i < this.complexity; i++) {
 			this.missingFunction[i] = 0;
 		}
@@ -246,9 +242,6 @@ public class ComposedFunction {
 			in.decideAndActFunction();
 		}
 
-		for(int i = 0; i < this.complexity; i++) {
-			System.out.println(this.missingFunction[i]);
-		}
 		for(int i = 0; i < this.complexity; i++) {
 			if(this.missingFunction[i] > 0) {
 				int reste = this.missingFunction[i]%this.seuilFunction;
@@ -289,7 +282,6 @@ public class ComposedFunction {
 			}
 		}
 
-		System.out.println(this);
 
 		int nbSatisfied = 0;
 		for(Input in : this.allInputs) {
@@ -297,31 +289,23 @@ public class ComposedFunction {
 				nbSatisfied++;
 			}
 			else {
-				System.out.println("NONSAT: "+in);
+				//System.out.println("NONSAT: "+in);
 			}
 		}
-		System.out.println("NBSUBF: "+this.subFunctions.size());
-
-
-		System.out.println("NBIN: "+this.allInputs.size());
-		System.out.println("NBSATIS: "+nbSatisfied);
 		this.satisfied = true;
 		for(Input in : this.allInputs) {
 			if(!in.satisfied()) {
 				this.satisfied=false;
-				System.out.println("ICI");
 			}
 		}
 		for(Output out: this.allOutputs) {
 			if(!out.satisfied()) {
 				this.satisfied = false;
-				System.out.println("LA");
 			}
 		}
 		for(SubFunction subf: this.subFunctions) {
 			if(!subf.isSatisfied()) {
 				this.satisfied = false;
-				System.out.println(subf);
 			}
 		}
 
@@ -470,7 +454,6 @@ public class ComposedFunction {
 	
 	@SuppressWarnings("unchecked")
 	public void setInitInput(int i, Float value) {
-		System.out.println(this.initInput);
 		if(this.initInput.get(i) instanceof InputFloat) {
 			((InputFloat)this.initInput.get(i)).setValue(value);
 		}
@@ -481,7 +464,6 @@ public class ComposedFunction {
 	
 	@SuppressWarnings("unchecked")
 	public void setInitInput(int i, Integer value) {
-		System.out.println(this.initInput);
 		if(this.initInput.get(i) instanceof InputFloat) {
 			((InputFloat)this.initInput.get(i)).setValue((float)value);
 		}

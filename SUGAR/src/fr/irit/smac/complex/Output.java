@@ -8,15 +8,30 @@ public abstract class Output<type extends Number> {
 	
 	private String name;
 	
-	private Input<type> binded;
+	protected Input<type> binded;
 	
 	private ComposedFunction cf;
+	
+	private int min;
+	
+	private int max;
 	
 	public Output(type value, int transform, String name,ComposedFunction cf) {
 		this.value = value;
 		this.transform = transform;
 		this.name = name;
 		this.cf = cf;
+		this.min = 0;
+		this.max = 50;
+	}
+	
+	public Output(type value, int transform, String name,ComposedFunction cf, int min, int max) {
+		this.value = value;
+		this.transform = transform;
+		this.name = name;
+		this.cf = cf;
+		this.min = min;
+		this.max = max;
 	}
 
 	public abstract type compute();
@@ -70,15 +85,41 @@ public abstract class Output<type extends Number> {
 		return "Output [name=" + name + ", binded=" + binded + "]";
 	}
 
-	public void perceiveValue() {
-		this.value = this.binded.getValue();
-		
-	}
+
+	public abstract void perceiveValue();
 	
 	public abstract SubFunction<type> createSubFunction(String name, int nbInput);
 
 	public ComposedFunction getCf() {
 		return cf;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public int getMin() {
+		return min;
+	}
+
+	public void setMin(int min) {
+		this.min = min;
+	}
+
+	public int getMax() {
+		return max;
+	}
+
+	public void setMax(int max) {
+		this.max = max;
+	}
+
+	public void setValue(type value) {
+		this.value = value;
 	}
 	
 	/*public SubFunction<type> createSubFunction(String name, int nbInput){

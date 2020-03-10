@@ -31,10 +31,6 @@ public class SubFunctionInt extends SubFunction<Integer>{
 		switch(this.getFormula()) {
 		case INV:
 			return 1/res;
-		case LOG:
-			return (int) Math.log(res);
-		case POW:
-			return res*res;
 		case SQRT:
 			return (int) Math.sqrt(res);
 		default:

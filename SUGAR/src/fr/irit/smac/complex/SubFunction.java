@@ -6,7 +6,7 @@ import java.util.Random;
 
 public abstract class SubFunction<type extends Number> {
 
-	public enum MathForm{SQRT,POW,LOG,INV};
+	public enum MathForm{SQRT,INV};
 
 	private MathForm myForm;
 
