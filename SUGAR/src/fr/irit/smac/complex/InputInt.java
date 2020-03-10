@@ -16,7 +16,6 @@ public class InputInt extends Input<Integer> {
 	@Override
 	public void setValue(Integer value) {
 		this.value = value;
-		System.out.println(this);
 	}
 	
 

@@ -126,4 +126,6 @@ public abstract class Output<type extends Number> {
 		return new SubFunction<type>(name, this.cf, nbInput, this.transform);
 	}*/
 	
+	
+	
 }

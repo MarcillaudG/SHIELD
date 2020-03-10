@@ -6,9 +6,14 @@ public class OutputFloat extends Output<Float> {
 		super(value, transform, name, cf);
 	}
 
+	float mod ( float x , int y )
+	{
+		return x >= 0 ? x % y : y - 1 - ((-x-1) % y) ;
+	}
+	
 	@Override
 	public Float compute() {
-		this.setValue((this.binded.getValue()%this.getMax()+this.getMin())%this.getMax());
+		this.setValue(mod(this.binded.getValue(), this.getMax())+ this.getMin());
 		return this.getValue();
 	}
 
@@ -20,7 +25,7 @@ public class OutputFloat extends Output<Float> {
 	
 	@Override
 	public void perceiveValue() {
-		this.setValue((this.binded.getValue()%this.getMax()+this.getMin())%this.getMax());
+		this.setValue(mod(this.binded.getValue(), this.getMax())+ this.getMin());
 	}
 
 }
