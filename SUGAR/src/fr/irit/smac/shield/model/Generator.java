@@ -24,7 +24,7 @@ public class Generator {
 
 	public static double MAX_VAR = 1.0;
 
-	private Map<String,Variable> variables;
+	protected Map<String,Variable> variables;
 
 	private int nbVar;
 

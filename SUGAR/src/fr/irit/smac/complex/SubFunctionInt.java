@@ -50,4 +50,8 @@ public class SubFunctionInt extends SubFunction<Integer>{
 		return new SubFunctionInt(name,this.getMasterFunction(), nbInput, this.getTransform()-1);
 	}
 
+	@Override
+	public String toString() {
+		return super.toString()+"INT";
+	}
 }

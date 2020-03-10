@@ -11,6 +11,11 @@ public class TypedVariable extends Variable{
 		this.type = type;
 	}
 	
+	public TypedVariable(Variable variable, String name) {
+		super(name, variable.getMin(), variable.getMax(), variable.getValue());
+		this.setFun(variable.getFun());
+	}
+
 	public String getType() {
 		return this.type;
 	}

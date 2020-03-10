@@ -42,4 +42,8 @@ public class SubFunctionFloat extends SubFunction<Float> {
 		return new SubFunctionFloat(name,this.getMasterFunction(), nbInput, this.getTransform()-1);
 	}
 
+	@Override
+	public String toString() {
+		return super.toString()+"FLOAT";
+	}
 }
