@@ -7,6 +7,10 @@ public class OutputInt extends Output<Integer> {
 		// TODO Auto-generated constructor stub
 	}
 	
+	public OutputInt(int value, int transform, String name,ComposedFunction cf, int min, int max) {
+		super(value, transform, name, cf,min,max);
+	}
+	
 	int mod ( int x , int y )
 	{
 		return x >= 0 ? x % y : y - 1 - ((-x-1) % y) ;

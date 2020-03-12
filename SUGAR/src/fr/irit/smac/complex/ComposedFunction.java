@@ -121,12 +121,12 @@ public class ComposedFunction {
 
 		for(int i =0; i < outputs.size();i++) {
 			if(outputs.get(i).equals("float")) {
-				Output<?> out = new OutputFloat(0.0f, this.complexity, "Output"+i,this);
+				Output<?> out = new OutputFloat(0.0f, this.complexity, "Output"+i,this, 20, 150);
 				this.outputs[i] = out;
 				this.allOutputs.add(out);
 			}
 			else {
-				Output<?> out = new OutputInt(0, this.complexity, "Output"+i,this);
+				Output<?> out = new OutputInt(0, this.complexity, "Output"+i,this, 10, 30);
 				this.outputs[i] = out;
 				this.allOutputs.add(out);
 			}

@@ -5,6 +5,11 @@ public class OutputFloat extends Output<Float> {
 	public OutputFloat(Float value, int transform, String name,ComposedFunction cf) {
 		super(value, transform, name, cf);
 	}
+	
+	public OutputFloat(Float value, int transform, String name,ComposedFunction cf, int min, int max) {
+		super(value, transform, name, cf,min,max);
+	}
+
 
 	float mod ( float x , int y )
 	{
