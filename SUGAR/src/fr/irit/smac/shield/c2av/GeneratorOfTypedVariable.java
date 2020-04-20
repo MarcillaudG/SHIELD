@@ -18,8 +18,22 @@ public class GeneratorOfTypedVariable extends Generator{
 		}
 	}
 
+	/**
+	 * Generate a copy of the variable dataName
+	 * 
+	 * @param dataName
+	 * 		The data name
+	 * @param nb
+	 * 		The number of the copy to change its name
+	 */
 	public void generateSimilarData(String dataName, int nb) {
 		Variable var = new TypedVariable(this.variables.get(dataName),dataName+"copy:"+nb);
+		this.putNewVariable(var.getName(), var);
+	}
+
+	public void generateSimilarDataDifferent(String dataName, int nbSimilar) {
+		Random rand = new Random();
+		Variable var = new CopyTypedVariable(this.variables.get(dataName),dataName+"copyDiff:"+nbSimilar,rand.nextFloat()*100);
 		this.putNewVariable(var.getName(), var);
 	}
 
@@ -33,6 +47,11 @@ public class GeneratorOfTypedVariable extends Generator{
 		Collections.shuffle(copies);
 		return copies.get(0);
 	}
+
+	public Variable getVariableWithName(String s) {
+		return this.variables.get(s);
+	}
+
 
 	
 }

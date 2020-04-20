@@ -68,6 +68,11 @@ public class Variable {
 	public void setFun(FunctionGen fun) {
 		this.fun = fun;
 	}
+	
+	public void setFun(FunctionGen fun, float morph) {
+		this.fun = new FunctionGen(fun,morph);
+		
+	}
 
 	@Override
 	public String toString() {

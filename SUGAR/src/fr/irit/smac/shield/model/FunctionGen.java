@@ -25,6 +25,8 @@ public class FunctionGen {
 	private double max;
 
 	private double min;
+	
+	private float morph;
 
 	/**
 	 * Return the value of the function
@@ -60,7 +62,7 @@ public class FunctionGen {
 
 			this.lastValue = res;
 		}
-		return res;
+		return res*this.morph;
 	}
 
 	private double operate(double res, Double poll, Operator poll2) {
@@ -90,6 +92,7 @@ public class FunctionGen {
 		this.operators = new ArrayDeque<Operator>();
 		this.variables = variables;
 		this.lastValue = 0.0;
+		this.morph = 1.0f;
 	}
 
 
@@ -105,6 +108,15 @@ public class FunctionGen {
 		this.operators = operators;
 		this.variables = variables;
 		this.lastValue = 0.0;
+		this.morph = 1.0f;
+	}
+
+	public FunctionGen(FunctionGen fun, float morph) {
+		this.nbVar = fun.nbVar;
+		this.operators = new ArrayDeque<Operator>(fun.operators);
+		this.variables = new ArrayDeque<String>(fun.variables);
+		this.lastValue = 0.0;
+		this.morph = morph;
 	}
 
 	/**
@@ -317,6 +329,10 @@ public class FunctionGen {
 			}
 			this.min = res;
 		}
+	}
+	
+	public void setMorph(float value) {
+		this.morph = value;
 	}
 
 }

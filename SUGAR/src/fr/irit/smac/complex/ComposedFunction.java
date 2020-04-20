@@ -90,7 +90,6 @@ public class ComposedFunction {
 		this.initInput = new ArrayList<>();
 		initList(input, outputs);
 		//init2output();
-
 		while(!this.isSatisfied()) {
 			this.cycleBinding();
 		}
@@ -416,7 +415,6 @@ public class ComposedFunction {
 
 
 	public void compute() {
-		System.out.println(this.initInput);
 		for(int i = 0; i < this.getinitInput().size();i++) {
 			if(this.getinitInput().get(i).value == null) {
 				System.out.println("ERROR: the input:"+this.getinitInput().get(i).getName()+" n'a pas de valeur" );
