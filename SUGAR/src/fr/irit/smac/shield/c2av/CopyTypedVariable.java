@@ -8,8 +8,8 @@ public class CopyTypedVariable extends TypedVariable {
 
 	public CopyTypedVariable(Variable variable, String name, float morph) {
 		super(variable, name);
-		// TODO Auto-generated constructor stub
 		this.mother = variable;
+		this.morph = morph;
 		System.out.println(name +"------------------------>>>>"+morph);
 	}
 
@@ -18,5 +18,13 @@ public class CopyTypedVariable extends TypedVariable {
 	public double getValue() {
 		return this.mother.getValue()*this.morph;
 	}
+
+
+	@Override
+	public String toString() {
+		return "CopyTypedVariable [mother=" + mother + "]";
+	}
+	
+	
 	
 }

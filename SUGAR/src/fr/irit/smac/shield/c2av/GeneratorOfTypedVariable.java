@@ -33,8 +33,10 @@ public class GeneratorOfTypedVariable extends Generator{
 
 	public void generateSimilarDataDifferent(String dataName, int nbSimilar) {
 		Random rand = new Random();
-		Variable var = new CopyTypedVariable(this.variables.get(dataName),dataName+"copyDiff:"+nbSimilar,rand.nextFloat()*100);
-		this.putNewVariable(var.getName(), var);
+		for(int i = 0; i < nbSimilar;i++) {
+			Variable var = new CopyTypedVariable(this.variables.get(dataName),dataName+"copyDiff:"+i,rand.nextFloat()*100);
+			this.putNewVariable(var.getName(), var);
+		}
 	}
 
 	public String getCopyOfVar(String s) {
@@ -53,5 +55,5 @@ public class GeneratorOfTypedVariable extends Generator{
 	}
 
 
-	
+
 }
