@@ -37,7 +37,10 @@ public class SyntheticFunction {
 
 	private Set<Integer> inputIdRemoved;
 
-	public enum Operator{ADD,SUB,SQUARE,OPP_SQUARE,POLY_SEC,POLY_LOG,LOG,SIN,COS,CARD};
+	//public enum Operator{ADD,SUB,SQUARE,OPP_SQUARE,POLY_SEC,POLY_LOG,LOG,SIN,COS,CARD};
+	
+
+	public enum Operator{ADD,SUB,SQUARE,OPP_SQUARE,POLY_SEC};
 
 	private Map<Input,Double> customData;
 
@@ -224,7 +227,7 @@ public class SyntheticFunction {
 		return res;
 	}
 
-	private double operate(double res, Double poll, Operator poll2) {
+/*	private double operate(double res, Double poll, Operator poll2) {
 		switch(poll2) {
 		case ADD:
 			return res +poll;
@@ -245,6 +248,24 @@ public class SyntheticFunction {
 			return res - Math.pow(poll, 2);
 		case SIN:
 			return res + Math.sin(poll);
+		case SQUARE:
+			return res + Math.pow(poll, 2);
+		case SUB:
+			return res - poll;
+		default:
+			return res;
+
+		}
+	}*/
+	
+	private double operate(double res, Double poll, Operator poll2) {
+		switch(poll2) {
+		case ADD:
+			return res +poll;
+		case POLY_SEC:
+			return res + Math.pow(poll, 2)+poll;
+		case OPP_SQUARE:
+			return res - Math.pow(poll, 2);
 		case SQUARE:
 			return res + Math.pow(poll, 2);
 		case SUB:
