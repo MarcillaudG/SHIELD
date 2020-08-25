@@ -1,6 +1,8 @@
 package fr.irit.smac.shield.model;
 
-public class VariableState {
+import java.io.Serializable;
+
+public class VariableState implements Serializable {
 	private String name;
 	private double value;
 	

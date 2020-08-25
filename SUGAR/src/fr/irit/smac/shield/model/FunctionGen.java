@@ -12,7 +12,9 @@ import fr.irit.smac.shield.exceptions.TooMuchVariableToRemoveException;
 public class FunctionGen {
 
 
-	public enum Operator{ADD,SUB,MULT};
+	//public enum Operator{ADD,SUB,MULT};
+	//public enum Operator{ADD,SUB};
+	public enum Operator{ADD};
 
 	private int nbVar;
 
@@ -70,10 +72,10 @@ public class FunctionGen {
 			return res + poll;
 			/*case DIV:
 			return res / poll;*/
-		case MULT:
-			return res * poll;
-		case SUB:
-			return res - poll;
+//		case MULT:
+//			return res * poll;
+//		case SUB:
+//			return res - poll;
 		default:
 			return res;
 
@@ -122,16 +124,17 @@ public class FunctionGen {
 		res.min = 0.0;
 
 		for(int i = 0 ; i < nbVar-1; i++) {
-			switch(rand.nextInt(3)) {
+			//switch(rand.nextInt(3)) {
+			switch(rand.nextInt(1)) {
 			case 0:
 				res.addOperator(Operator.ADD);
 				break;
-			case 1:
-				res.addOperator(Operator.SUB);
-				break;
-			case 2:
-				res.addOperator(Operator.MULT);
-				break;
+//			case 1:
+//				res.addOperator(Operator.SUB);
+//				break;
+//			case 2:
+//				res.addOperator(Operator.MULT);
+//				break;
 				/*case 3:
 				res.addOperator(Operator.DIV);
 				break;*/
@@ -149,7 +152,7 @@ public class FunctionGen {
 	 * @param variables
 	 * @return the new Function
 	 */
-	public static FunctionGen generateFunctionWithRange(int nbVar, Deque<Variable> variables,double min,double max) {
+	public static FunctionGen generateFunctionWithRange(int nbVar, Deque<Variable> variables) {
 		Random rand = new Random();
 		Deque<String> nameOfVariables= new ArrayDeque<String>();
 		Deque<Variable> varTmp = new ArrayDeque<Variable>(variables);
@@ -159,16 +162,17 @@ public class FunctionGen {
 		FunctionGen res = new FunctionGen(nbVar,nameOfVariables);
 
 		for(int i = 0 ; i < nbVar-1; i++) {
-			switch(rand.nextInt(3)) {
+			//switch(rand.nextInt(3)) {
+			switch(rand.nextInt(1)) {
 			case 0:
 				res.addOperator(Operator.ADD);
 				break;
-			case 1:
-				res.addOperator(Operator.SUB);
-				break;
-			case 2:
-				res.addOperator(Operator.MULT);
-				break;
+//			case 1:
+//				res.addOperator(Operator.SUB);
+//				break;
+//			case 2:
+//				res.addOperator(Operator.MULT);
+//				break;
 				/*case 3:
 				res.addOperator(Operator.DIV);
 				break;*/
@@ -264,12 +268,12 @@ public class FunctionGen {
 		Deque<Operator> tmp = new ArrayDeque<Operator>(operators);
 		while(!tmp.isEmpty()) {
 			Operator ope = tmp.poll();
-			if(ope == Operator.SUB) {
-				res = operate(res,0.0,ope);
-			}
-			else {
+//			if(ope == Operator.SUB) {
+//				res = operate(res,0.0,ope);
+//			}
+//			else {
 				res = operate(res,1.0,ope);
-			}
+//			}
 		}
 		return res;
 	}
@@ -289,12 +293,12 @@ public class FunctionGen {
 			while(!tmp.isEmpty()) {
 				Operator ope = tmp.poll();
 				Variable var = valuesTmp.poll();
-				if(ope.equals(Operator.SUB)) {
-					res = operate(res,var.getMin(),ope);
-				}
-				else {
+//				if(ope.equals(Operator.SUB)) {
+//					res = operate(res,var.getMin(),ope);
+//				}
+//				else {
 					res = operate(res,var.getMax(),ope);
-				}
+//				}
 			}
 			this.max = res;
 		}
@@ -315,12 +319,12 @@ public class FunctionGen {
 			while(!tmp.isEmpty()) {
 				Operator ope = tmp.poll();
 				Variable var = valuesTmp.poll();
-				if(ope.equals(Operator.SUB)) {
-					res = operate(res,var.getMax(),ope);
-				}
-				else {
+//				if(ope.equals(Operator.SUB)) {
+//					res = operate(res,var.getMax(),ope);
+//				}
+	//			else {
 					res = operate(res,var.getMin(),ope);
-				}
+//				}
 			}
 			this.min = res;
 		}

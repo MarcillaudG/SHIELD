@@ -3,23 +3,23 @@ package fr.irit.smac.shield.recovac;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.irit.smac.shield.recovac.VariableTuple;
+import fr.irit.smac.shield.recovac.VariableEVTuple;
 
 public class SituationTuple {
 	private int idSituation;
-	private List<VariableTuple> variables = new ArrayList<VariableTuple>();
+	private List<VariableEVTuple> variablesEV = new ArrayList<VariableEVTuple>();
 	private boolean capacity; //true = capable , false = incapable
 	private float noiseAdded;
 	
-	public SituationTuple(int idSituation, List<VariableTuple> variablesTuple, boolean capacity) {
+	public SituationTuple(int idSituation, List<VariableEVTuple> variablesTuple, boolean capacity) {
 		this.idSituation = idSituation;
-		this.variables = variablesTuple;
+		this.variablesEV = variablesTuple;
 		this.capacity = capacity;
 	}
 	
-	public SituationTuple(int idSituation, List<VariableTuple> variablesTuple, float noise) {
+	public SituationTuple(int idSituation, List<VariableEVTuple> variablesTuple, float noise) {
 		this.idSituation = idSituation;
-		this.variables = variablesTuple;
+		this.variablesEV = variablesTuple;
 		this.noiseAdded = noise;
 	}
 
@@ -31,12 +31,12 @@ public class SituationTuple {
 		this.idSituation = idSituation;
 	}
 	
-	public List<VariableTuple> getVariables() {
-		return variables;
+	public List<VariableEVTuple> getVariables() {
+		return variablesEV;
 	}
 	
-	public void setVariables(List<VariableTuple> variables) {
-		this.variables = variables;
+	public void setVariables(List<VariableEVTuple> variables) {
+		this.variablesEV = variables;
 	}
 
 	public boolean getCapacity() {
@@ -57,10 +57,10 @@ public class SituationTuple {
 	
 	@Override
 	public String toString() {
-		return "Situation " + idSituation + ": \n" + variables + "\n noiseAdded=" + noiseAdded + "\n capacity=" + capacity + "\n";
+		return "Situation " + idSituation + ": \n" + variablesEV + "\n noiseAdded=" + noiseAdded + "\n capacity=" + capacity + "\n";
 	}
 	
-	public String print(List<VariableTuple> actions) {
-		return "Situation " + idSituation + ": \n" + variables + "\n" + actions + "\n noiseAdded=" + noiseAdded + "\n capacity=" + capacity + "\n";
+	public String print(List<VariableEVTuple> actions) {
+		return "Situation " + idSituation + ": \n" + variablesEV + "\n" + actions + "\n noiseAdded=" + noiseAdded + "\n capacity=" + capacity + "\n";
 	}
 }

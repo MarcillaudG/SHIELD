@@ -27,11 +27,11 @@ public class RecovacGenerator extends Generator {
 	protected List<Float> totalNoiseS;
 	protected List<Variable> variablesAInitialized;
 	protected List<Variable> variablesCInitialized;
-	protected List<Double> variablesObserved;
+	protected List<Double> variablesEVRealObserved;
 	protected List<Function> variablesCFunction;
 	protected List<Function> variablesAFunction;
 	protected List<SituationTuple> situationTuple;
-	protected List<VariableTuple> variablesTuple;
+	protected List<VariableEVTuple> variablesEVTuple;
 	protected List<Oracle> situationsSMA;
 
 	public RecovacGenerator(int nbSituations, int nbContextV, int nbActionSV) {
@@ -82,7 +82,7 @@ public class RecovacGenerator extends Generator {
 		for (String s : this.variables.keySet()) {
 			newValue = this.variables.get(s).generateValue();
 			this.variables.get(s).setValue(newValue);
-			this.variablesTuple.add(new VariableTuple (this.variables.get(s).getName(), this.variables.get(s).getFun(), this.valueWithThreeDecimal(this.variables.get(s).getValue())));
+			this.variablesEVTuple.add(new VariableEVTuple (this.variables.get(s).getName(), this.variables.get(s).getFun(), this.valueWithThreeDecimal(this.variables.get(s).getValue())));
 		}
 		for (String s : this.variablesActionState.keySet()) {
 			newValue = this.variablesActionState.get(s).generateValue();
@@ -150,7 +150,7 @@ public class RecovacGenerator extends Generator {
 
 			variablesPossiblyInfluencing.remove(var);
 		}
-		variable.setFun(FunctionGen.generateFunctionWithRange(parameters.size(), parameters,variable.getMin(),variable.getMin()));
+		variable.setFun(FunctionGen.generateFunctionWithRange(parameters.size(), parameters));
 		this.variables.put(variable.getName(), variable);
 		this.variablesCFunction.add(new Function(variable.getName(), variable.getFun()));
 	}
@@ -175,7 +175,7 @@ public class RecovacGenerator extends Generator {
 
 			variablesPossiblyInfluencing.remove(var);
 		}
-		variable.setFun(FunctionGen.generateFunctionWithRange(parameters.size(), parameters,variable.getMin(),variable.getMin()));
+		variable.setFun(FunctionGen.generateFunctionWithRange(parameters.size(), parameters));
 		this.variablesActionState.put(variable.getName(), variable);
 		this.variablesAFunction.add(new Function(variable.getName(), variable.getFun()));
 	}
@@ -236,6 +236,7 @@ public class RecovacGenerator extends Generator {
 			auxcap = this.calculateAbnormalityDetectionOfSituation(thresholde, this.valueWithThreeDecimal(totalNoiseS.get(i)));
 			
 			this.situationTuple.get(i).setCapacity(auxcap);
+			this.situationsSMA.get(i).setCapacity(auxcap);
 		}
 		
 		//System.out.println(" \nThresholde = " + thresholde + "\n");
@@ -253,8 +254,8 @@ public class RecovacGenerator extends Generator {
 	 * 		the id of the situation
 	 */
 	public void executeMethods (int index) {
-		this.variablesTuple = new ArrayList<VariableTuple>();
-		this.variablesObserved = new ArrayList<Double>();
+		this.variablesEVTuple = new ArrayList<VariableEVTuple>();
+		this.variablesEVRealObserved = new ArrayList<Double>();
 		this.h = new ArrayList<Double>();
 		double minOb;
 		double maxOb;
@@ -269,11 +270,13 @@ public class RecovacGenerator extends Generator {
 		this.normalizeAllVariables(this.variablesActionState);
 		//System.out.println("\nActions state in S" + (index+1) + ":");
 		//this.printActionStateVariables();
+		//this.printAllAVariablesFunctions();
 		
 		//Predicted Value
 		this.generateAllValues();
 		this.normalizeAllVariables(this.variables);
 		//this.printAllVariables();
+		//this.printAllCVariablesFunctions();
 		
 		for (String s : this.variables.keySet()) {
 			auxVariable.add(this.variables.get(s));
@@ -283,34 +286,39 @@ public class RecovacGenerator extends Generator {
 		
 		//Observed Value
 		epsilonFunc.generateAllObservedValuesWithFunc();
-		this.variablesObserved = epsilonFunc.getVariablesObserved();
-		maxOb = epsilonFunc.getMaxValueList(variablesObserved);
-		minOb = epsilonFunc.getMinValueList(variablesObserved); 
+		this.variablesEVRealObserved = epsilonFunc.getVariablesObserved();
+		maxOb = epsilonFunc.getMaxValueList(variablesEVRealObserved);
+		minOb = epsilonFunc.getMinValueList(variablesEVRealObserved); 
 		
-		for(int i = 0; i < this.variablesObserved.size(); i++) {
+		for(int i = 0; i < this.variablesEVRealObserved.size(); i++) {
 			//double aux = this.variablesObserved.get(i);
-			double aux = this.normalize(this.variablesObserved.get(i), maxOb, minOb, MIN_VAR, MAX_VAR);
+			double aux = this.normalize(this.variablesEVRealObserved.get(i), maxOb, minOb, MIN_VAR, MAX_VAR);
 
-			this.variablesObserved.set(i, aux);
+			this.variablesEVRealObserved.set(i, aux);
 		}
 	
 		//this.printHValues();
 		this.generateTuple();
 			
-		this.situationTuple.add(new SituationTuple ((index+1), this.variablesTuple, this.totalNoiseS.get(index)));
+		this.situationTuple.add(new SituationTuple ((index+1), this.variablesEVTuple, this.totalNoiseS.get(index)));
 		
 		//Oracle for SMA LDiR
-		List<Variable> observedVariables = new ArrayList<Variable>();
-		for (int j = 0; j < variablesTuple.size(); j++) {
-			observedVariables.add(new Variable( this.variablesTuple.get(j).getName(),(double) this.variablesTuple.get(j).getValueObserved()));
+		List<Variable> expectedValueEV = new ArrayList<Variable>();
+		for (int j = 0; j < variablesEVTuple.size(); j++) {
+			expectedValueEV.add(new Variable( this.variablesEVTuple.get(j).getName(),(double) this.variablesEVTuple.get(j).getRealValue()));
 		}
 		
-		List<Variable> valueVariables = new ArrayList<Variable>();
-		for (int j = 0; j < variablesTuple.size(); j++) {
-			valueVariables.add(new Variable( this.variablesTuple.get(j).getName(),(double) this.variablesTuple.get(j).getValue()));
+		List<Variable> currentValueEV = new ArrayList<Variable>();
+		for (int j = 0; j < variablesEVTuple.size(); j++) {
+			currentValueEV.add(new Variable( this.variablesEVTuple.get(j).getName(),(double) this.variablesEVTuple.get(j).getCurrentValue()));
 		} 
 		
-		this.situationsSMA.add(new Oracle (this.variablesActionState, valueVariables, observedVariables));
+		List<Variable> intentionalValueEV = new ArrayList<Variable>();
+		for (int j = 0; j < variablesEVTuple.size(); j++) {
+			intentionalValueEV.add(new Variable( this.variablesEVTuple.get(j).getName(),(double) this.variablesEVTuple.get(j).getIntentionalValue()));
+		}
+		
+		this.situationsSMA.add(new Oracle (this.variablesActionState, currentValueEV, expectedValueEV, intentionalValueEV));
 		//printSituationsSMA();
 		
 		//this.displayAllVariablesEvolution(index);
@@ -324,14 +332,14 @@ public class RecovacGenerator extends Generator {
 		double auxdeviation = 0.0;
 		double totalDeviation = 0.0;
 		
-		for(int s = 0; s < this.variablesTuple.size(); s++) {
-			this.variablesTuple.get(s).setValuePredicted(this.valueWithThreeDecimal(this.variables.get(this.variablesTuple.get(s).getName()).getValue()));
-			this.variablesTuple.get(s).setValueObserved(this.valueWithThreeDecimal(this.variablesObserved.get(s)));
+		for(int s = 0; s < this.variablesEVTuple.size(); s++) {
+			this.variablesEVTuple.get(s).setIntentionalValue(this.valueWithThreeDecimal(this.variables.get(this.variablesEVTuple.get(s).getName()).getValue()));
+			this.variablesEVTuple.get(s).setRealValue(this.valueWithThreeDecimal(this.variablesEVRealObserved.get(s)));
 			
-			auxdeviation = this.deviationValue(this.variablesTuple.get(s).getValuePredicted(), this.variablesTuple.get(s).getValueObserved());
+			auxdeviation = this.deviationValue(this.variablesEVTuple.get(s).getIntentionalValue(), this.variablesEVTuple.get(s).getRealValue());
 			totalDeviation += auxdeviation;
 			
-			this.variablesTuple.get(s).setDeviation(this.valueWithThreeDecimal(auxdeviation));
+			this.variablesEVTuple.get(s).setDeviation(this.valueWithThreeDecimal(auxdeviation));
 		}
 		this.totalNoiseS.add(this.valueWithThreeDecimal(totalDeviation));
 	}
@@ -531,18 +539,18 @@ public class RecovacGenerator extends Generator {
 	
 	public void displayAllVariablesEvolution(int _index) {
 		ILxPlotChart auxChart;
-		for(int i = 0; i < this.variablesTuple.size(); i++) {
-			auxChart = LxPlot.getChart(this.variablesTuple.get(i).getName());
-			auxChart.add("Predicted value", _index, this.variablesTuple.get(i).getValuePredicted());
-			auxChart.add("Observed value ", _index, this.variablesTuple.get(i).getValueObserved());
+		for(int i = 0; i < this.variablesEVTuple.size(); i++) {
+			auxChart = LxPlot.getChart(this.variablesEVTuple.get(i).getName());
+			auxChart.add("Intention value", _index, this.variablesEVTuple.get(i).getIntentionalValue());
+			auxChart.add("Observed value ", _index, this.variablesEVTuple.get(i).getRealValue());
 		}
 	}
 	
 	public void displayDeviationEvolution (int _index) {
 		ILxPlotChart auxChart;
-		for(int i = 0; i < this.variablesTuple.size(); i++) {
-			auxChart = LxPlot.getChart( this.variablesTuple.get(i).getName() + "deviation");
-			auxChart.add("Deviation ", _index, this.variablesTuple.get(i).getDeviation());
+		for(int i = 0; i < this.variablesEVTuple.size(); i++) {
+			auxChart = LxPlot.getChart( this.variablesEVTuple.get(i).getName() + "deviation");
+			auxChart.add("Deviation ", _index, this.variablesEVTuple.get(i).getDeviation());
 		}
 	}
 	

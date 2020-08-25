@@ -147,7 +147,7 @@ public class Generator {
 			variablesRemaining.remove(param);
 			variablesRemaining.removeAll(var.getFun().getVariables());
 		}
-		v.setFun(FunctionGen.generateFunctionWithRange(parameters.size(), parameters,min,max));
+		v.setFun(FunctionGen.generateFunctionWithRange(parameters.size(), parameters));
 
 		this.variables.put(variable,v);
 

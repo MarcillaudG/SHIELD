@@ -72,8 +72,8 @@ public class WithRecovacAbnormalDC extends RecovacGenerator{
 	}
 	
 	public void executeMethods (boolean type, int index) {
-		this.variablesTuple = new ArrayList<VariableTuple>();
-		this.variablesObserved = new ArrayList<Double>();
+		this.variablesEVTuple = new ArrayList<VariableEVTuple>();
+		this.variablesEVRealObserved = new ArrayList<Double>();
 		this.h = new ArrayList<Double>();
 		List<Variable> auxVariable = new ArrayList<>();
 		
@@ -91,9 +91,9 @@ public class WithRecovacAbnormalDC extends RecovacGenerator{
 		
 		//Observed Value
 		epsilonFunc.generateAllObservedValuesWithFunc();
-		this.variablesObserved = epsilonFunc.getVariablesObserved();
+		this.variablesEVRealObserved = epsilonFunc.getVariablesObserved();
 		
-		this.situationTuple.add(new SituationTuple (index, this.variablesTuple,this.calculateCapacityOfSituation()));
+		this.situationTuple.add(new SituationTuple (index, this.variablesEVTuple,this.calculateCapacityOfSituation()));
 		
 		//this.printHValues();
 		this.generateTuple();
