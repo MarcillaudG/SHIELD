@@ -14,6 +14,7 @@ public class FunctionGen {
 
 	//public enum Operator{ADD,SUB,MULT};
 	//public enum Operator{ADD,SUB};
+	//TODO: https://stackoverflow.com/a/31840225 
 	public enum Operator{ADD};
 
 	private int nbVar;

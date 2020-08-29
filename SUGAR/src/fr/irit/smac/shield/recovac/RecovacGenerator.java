@@ -18,6 +18,7 @@ import fr.irit.smac.shield.model.FunctionGen;
 import fr.irit.smac.shield.model.Generator;
 import fr.irit.smac.shield.model.Variable;
 
+//TODO: Make it able to regenerate values
 public class RecovacGenerator extends Generator {
 	protected int numberS;
 	protected int numberCV;

@@ -3,8 +3,8 @@ package fr.irit.smac.shield.model;
 import java.io.Serializable;
 
 public class VariableState implements Serializable {
-	private String name;
-	private double value;
+	protected String name;
+	protected double value;
 	
 	public VariableState(String name, double value) {
 		this.name = name;
