@@ -20,7 +20,7 @@ public class VariableState implements Serializable {
 		this.name = name;
 	}
 
-	public double getValue() {
+	public Double getValue() {
 		return value;
 	}
 
@@ -44,13 +44,14 @@ public class VariableState implements Serializable {
 		return counter;
 	}
 	
-	public static VariableState getState(List<VariableState> variableStateList,  String idVariable) {
+	public static VariableState findVariableStateIn(List<VariableState> variableStateList,  String idVariable) {
 		for (VariableState variableState : variableStateList) {
 			if(variableState.getName().equals(idVariable)) {
 				return variableState;
 			}
 		}
 		return null;
-	}
+	}			
+				
 	
 }

@@ -1,5 +1,6 @@
 package fr.irit.smac.shield.recovac;
 
+import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayDeque;
@@ -19,7 +20,11 @@ import fr.irit.smac.shield.model.Generator;
 import fr.irit.smac.shield.model.Variable;
 
 //TODO: Make it able to regenerate values
-public class RecovacGenerator extends Generator {
+public class RecovacGenerator extends Generator implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8430903842247797322L;
 	protected int numberS;
 	protected int numberCV;
 	protected int numberAV;
